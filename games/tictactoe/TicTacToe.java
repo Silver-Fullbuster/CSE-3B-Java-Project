@@ -41,31 +41,31 @@ public class TicTacToe { //TODO: Possibly implement an interface for scores
         } while (!gameEnded());
         System.out.println("Game Ended");
         showBoard();
-        if(OXChoice == winnerChar)
+        if (OXChoice == winnerChar)
             System.out.println("Player won");
         else
             System.out.println("Computer won");
         //TODO: End Game Scoring
     }
 
-    private boolean gameEnded(){
-        for(int i = 0; i < 3; i++) {
-            if (board[i][0] == board[i][1] && board[i][1] == board[i][2]) {
+    private boolean gameEnded() {
+        for (int i = 0; i < 3; i++) {
+            if (board[i][0] != ' ' && board[i][0] == board[i][1] && board[i][1] == board[i][2]) {
                 winnerChar = board[i][0];
                 return true;
             }
-            if (board[0][i] == board[1][i] && board[1][i] == board[2][i]){
+            if (board[0][i] != ' ' && board[0][i] == board[1][i] && board[1][i] == board[2][i]) {
                 winnerChar = board[0][i];
                 return true;
             }
         }
 
-        if(board[0][0] == board[1][1] && board[1][1] == board[2][2]) {
+        if (board[0][0] != ' ' && board[0][0] == board[1][1] && board[1][1] == board[2][2]) {
             winnerChar = board[0][0];
             return true;
         }
 
-        if(board[0][2] == board[1][1] && board[1][1] == board[2][0]){
+        if (board[0][2] != ' ' && board[0][2] == board[1][1] && board[1][1] == board[2][0]) {
             winnerChar = board[0][2];
             return true;
         }
@@ -83,20 +83,20 @@ public class TicTacToe { //TODO: Possibly implement an interface for scores
             if (index < 0 || index > 8) {
                 System.out.println("Unknown Choice");
                 inputIssue = true;
-            } else if (board[(index) / 3][index] != ' ') {
+            } else if (board[(index) / 3][index % 3] != ' ') {
                 System.out.println("Already filled!!");
                 inputIssue = true;
             }
         } while (inputIssue);
-        board[index / 3][index] = OXChoice;
+        board[index / 3][index % 3] = OXChoice;
     }
 
     private void getComputerInput() { //TODO: Better logic
         int index;
         do {
             index = ThreadLocalRandom.current().nextInt(0, 9);
-        }while (board[index/3][index] != ' ');
-        board[index/3][index] = OXChoice == 'O' ? 'X' : 'O';
+        } while (board[index / 3][index % 3] != ' ');
+        board[index / 3][index % 3] = OXChoice == 'O' ? 'X' : 'O';
     }
 
     private void showBoard() {
@@ -105,7 +105,7 @@ public class TicTacToe { //TODO: Possibly implement an interface for scores
             for (char j : i) {
                 System.out.print(j + "|");
             }
-            System.out.print("\n");
+            System.out.print("\b \n");
         }
     }
 
