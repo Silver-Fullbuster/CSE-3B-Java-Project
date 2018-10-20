@@ -25,12 +25,11 @@ public class TicTacToe { //TODO: Possibly implement an interface for scores
             obj.firstTurn = scanner.next().equals("Yes"); //TODO: Multiple inputs
             obj.startGame();
             System.out.println("Another game? y/n"); //TODO: UX
-        } while (scanner.nextLine().equals("n"));
+        } while (scanner.next().equals("y"));
     }
 
     private void startGame() {
         do {
-            showBoard();
             if (firstTurn) getPlayerInput();
             else getComputerInput();
 
@@ -74,6 +73,7 @@ public class TicTacToe { //TODO: Possibly implement an interface for scores
     }
 
     private void getPlayerInput() {
+        showBoard();
         boolean inputIssue;
         int index;
         do {
