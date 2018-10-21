@@ -3,7 +3,7 @@ package games.tictactoe;
 import java.util.Scanner;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class TicTacToe { //TODO: Possibly implement an interface for scores
+public class TicTacToe { //TODO: Possibly implement an interface for scores and GridInput
     private char OXChoice;
     private boolean firstTurn;
     private char board[][];
@@ -40,7 +40,9 @@ public class TicTacToe { //TODO: Possibly implement an interface for scores
         } while (!gameEnded());
         System.out.println("Game Ended");
         showBoard();
-        if (OXChoice == winnerChar)
+        if (OXChoice == ' ')
+            System.out.println("It's a tie!");
+        else if (OXChoice == winnerChar)
             System.out.println("Player won");
         else
             System.out.println("Computer won");
@@ -93,6 +95,12 @@ public class TicTacToe { //TODO: Possibly implement an interface for scores
 
     private void getComputerInput() { //TODO: Better logic
         int index;
+        System.out.println("Computer playing move..");
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         do {
             index = ThreadLocalRandom.current().nextInt(0, 9);
         } while (board[index / 3][index % 3] != ' ');
@@ -103,7 +111,7 @@ public class TicTacToe { //TODO: Possibly implement an interface for scores
         //TODO: Proper design
         for (char i[] : board) {
             for (char j : i) {
-                System.out.print(j + "|");
+                System.out.print(j + "|");//TODO: Parentheses for each
             }
             System.out.print("\b \n");
         }
