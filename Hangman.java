@@ -11,4 +11,8 @@ public class Hangman{
 	{
 		System.out.println("mul= "a*b);
 	}
+	void division(int a, int b)
+	{
+		System.out.println("div= "a/b);
+	}
 }
