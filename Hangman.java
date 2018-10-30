@@ -7,4 +7,8 @@ public class Hangman{
 	{
 		System.out.println("sub= "a-b);
 	}
+	void multiplication(int a, int b)
+	{
+		System.out.println("mul= "a*b);
+	}
 }
