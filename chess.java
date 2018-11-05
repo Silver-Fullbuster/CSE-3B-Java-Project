@@ -1,3 +1,6 @@
+// Will Add Pieces using ASCII (already available there). 
+// Methods nearly ready; researching a few new things for now
+
 public class chess{
 
 public static void main(String[] args) {
