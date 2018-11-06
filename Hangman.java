@@ -1,22 +1,16 @@
-public class Hangman{
-	void square(int a)
+class Hangman
+{
+	public static void main(String args[])
 	{
-		System.out.println("square= "a*a);
-	}
-	void addition(int a, int b)
-	{
-		System.out.println("sum= "a+b);
-	}
-	void subtraction(int a, int b)
-	{
-		System.out.println("sub= "a-b);
-	}
-	void multiplication(int a, int b)
-	{
-		System.out.println("mul= "a*b);
-	}
-	void division(int a, int b)
-	{
-		System.out.println("div= "a/b);
+		System.out.println("welcome to hangman game!");
+		System.out.println("the word to be guessed is "+secretWord.length+" letters long" );
+		int i=0, wrongGuess=0;
+		System.oyut.println("max no.of wrong guesses is 8");
+		System.out.println("ALL THE BEST!");
+		char letterGuessed;
+		while(WrongGuess<8)
+		{
+			System.out.println("enter the letter")
+		}
 	}
 }
