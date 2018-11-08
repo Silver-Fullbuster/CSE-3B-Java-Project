@@ -17,14 +17,22 @@ public class TicTacToe { //TODO: Possibly implement an interface for scores and 
     public static void launch() {
         do {
             TicTacToe obj = new TicTacToe();
+            String tempInput;
             //TODO: Decide design for startup of game
             System.out.println("What do you want to play as, O or X?\n" +
                     "Enter choice: ");
-            obj.OXChoice = scanner.next().charAt(0); //TODO: Ensure O or X input
+            for(boolean invalidInput = true; invalidInput;) {
+                obj.OXChoice = Character.toUpperCase(scanner.next().charAt(0));
+                if (obj.OXChoice == 'O' || obj.OXChoice == 'X')
+                    invalidInput = false;
+                else
+                    System.out.println("Only O or X allowed for input!!\nEnter choice: ");
+            }
             System.out.println("Do you want to play first?");
-            obj.firstTurn = scanner.next().equals("Yes"); //TODO: Multiple inputs
+            tempInput = scanner.next().toUpperCase();
+            obj.firstTurn = tempInput.equals("YES") || tempInput.equals("Y");
             obj.startGame();
-            System.out.println("Another game? y/n"); //TODO: UX
+            System.out.println("Enter 'y' to play again, any other key will exit!"); //TODO: UX
         } while (scanner.next().equals("y"));
     }
 
@@ -51,22 +59,22 @@ public class TicTacToe { //TODO: Possibly implement an interface for scores and 
 
     private boolean gameEnded() {
         for (int i = 0; i < 3; i++) {
-            if (board[i][0] != ' ' && board[i][0] == board[i][1] && board[i][1] == board[i][2]) {
+            if (!Character.isDigit(board[i][0]) && board[i][0] == board[i][1] && board[i][1] == board[i][2]) {
                 winnerChar = board[i][0];
                 return true;
             }
-            if (board[0][i] != ' ' && board[0][i] == board[1][i] && board[1][i] == board[2][i]) {
+            if (!Character.isDigit(board[0][i]) && board[0][i] == board[1][i] && board[1][i] == board[2][i]) {
                 winnerChar = board[0][i];
                 return true;
             }
         }
 
-        if (board[0][0] != ' ' && board[0][0] == board[1][1] && board[1][1] == board[2][2]) {
+        if (!Character.isDigit(board[0][0]) && board[0][0] == board[1][1] && board[1][1] == board[2][2]) {
             winnerChar = board[0][0];
             return true;
         }
 
-        if (board[0][2] != ' ' && board[0][2] == board[1][1] && board[1][1] == board[2][0]) {
+        if (!Character.isDigit(board[0][2]) && board[0][2] == board[1][1] && board[1][1] == board[2][0]) {
             winnerChar = board[0][2];
             return true;
         }
@@ -85,7 +93,7 @@ public class TicTacToe { //TODO: Possibly implement an interface for scores and 
             if (index < 0 || index > 8) {
                 System.out.println("Unknown Choice");
                 inputIssue = true;
-            } else if (board[(index) / 3][index % 3] != ' ') {
+            } else if (!Character.isDigit(board[(index) / 3][index % 3])) {
                 System.out.println("Already filled!!");
                 inputIssue = true;
             }
@@ -97,13 +105,13 @@ public class TicTacToe { //TODO: Possibly implement an interface for scores and 
         int index;
         System.out.println("Computer playing move..");
         try {
-            Thread.sleep(1000);
+            Thread.sleep(500);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
         do {
             index = ThreadLocalRandom.current().nextInt(0, 9);
-        } while (board[index / 3][index % 3] != ' ');
+        } while (!Character.isDigit(board[index / 3][index % 3]));
         board[index / 3][index % 3] = OXChoice == 'O' ? 'X' : 'O';
     }
 
@@ -120,7 +128,7 @@ public class TicTacToe { //TODO: Possibly implement an interface for scores and 
     private boolean boardFilled() {
         for (char i[] : board)
             for (char j : i)
-                if (j == ' ')
+                if (Character.isDigit(j))
                     return false;
         return true;
     }
@@ -129,6 +137,6 @@ public class TicTacToe { //TODO: Possibly implement an interface for scores and 
         board = new char[3][3];
         for (int i = 0; i < 3; i++)
             for (int j = 0; j < 3; j++)
-                board[i][j] = ' ';
+                board[i][j] = (char)(i*3 + j + 49);
     }
 }
