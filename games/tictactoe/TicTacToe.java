@@ -7,7 +7,10 @@ public class TicTacToe { //TODO: Possibly implement an interface for scores and 
     private char OXChoice;
     private boolean firstTurn;
     private char board[][];
-    private char winnerChar;
+    /**
+     * @see TicTacToe#gameEnded()
+     **/
+    private char winnerChar = ' ';
     private static Scanner scanner;
 
     static {
@@ -21,7 +24,7 @@ public class TicTacToe { //TODO: Possibly implement an interface for scores and 
             //TODO: Decide design for startup of game
             System.out.println("What do you want to play as, O or X?\n" +
                     "Enter choice: ");
-            for(boolean invalidInput = true; invalidInput;) {
+            for (boolean invalidInput = true; invalidInput; ) {
                 obj.OXChoice = Character.toUpperCase(scanner.next().charAt(0));
                 if (obj.OXChoice == 'O' || obj.OXChoice == 'X')
                     invalidInput = false;
@@ -48,9 +51,9 @@ public class TicTacToe { //TODO: Possibly implement an interface for scores and 
         } while (!gameEnded());
         System.out.println("Game Ended");
         showBoard();
-        if (OXChoice == ' ')
+        if (winnerChar == ' ')
             System.out.println("It's a tie!");
-        else if (OXChoice == winnerChar)
+        else if (winnerChar == OXChoice)
             System.out.println("Player won");
         else
             System.out.println("Computer won");
@@ -58,6 +61,7 @@ public class TicTacToe { //TODO: Possibly implement an interface for scores and 
     }
 
     private boolean gameEnded() {
+        winnerChar = ' ';   //No winner decided (TIE condition)
         for (int i = 0; i < 3; i++) {
             if (!Character.isDigit(board[i][0]) && board[i][0] == board[i][1] && board[i][1] == board[i][2]) {
                 winnerChar = board[i][0];
@@ -137,6 +141,6 @@ public class TicTacToe { //TODO: Possibly implement an interface for scores and 
         board = new char[3][3];
         for (int i = 0; i < 3; i++)
             for (int j = 0; j < 3; j++)
-                board[i][j] = (char)(i*3 + j + 49);
+                board[i][j] = (char) (i * 3 + j + 49);
     }
 }
