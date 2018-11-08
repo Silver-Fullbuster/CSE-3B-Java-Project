@@ -17,9 +17,11 @@ public class TicTacToe { //TODO: Possibly implement an interface for scores and 
         scanner = new Scanner(System.in);
     }
 
+
     public static void launch() {
         do {
             TicTacToe obj = new TicTacToe();
+            String tempInput;
             //TODO: Decide design for startup of game
             System.out.println("What do you want to play as, O or X?\n" +
                     "Enter choice: ");
@@ -30,11 +32,11 @@ public class TicTacToe { //TODO: Possibly implement an interface for scores and 
                 else
                     System.out.println("Only O or X allowed for input!!\nEnter choice: ");
             }
-            obj.OXChoice = scanner.next().charAt(0); //TODO: Ensure O or X input
             System.out.println("Do you want to play first?");
-            obj.firstTurn = scanner.next().equals("Yes"); //TODO: Multiple inputs
+            tempInput = scanner.next().toUpperCase();
+            obj.firstTurn = tempInput.equals("YES") || tempInput.equals("Y");
             obj.startGame();
-            System.out.println("Another game? y/n"); //TODO: UX
+            System.out.println("Enter 'y' to play again, any other key will exit!"); //TODO: UX
         } while (scanner.next().equals("y"));
     }
 
