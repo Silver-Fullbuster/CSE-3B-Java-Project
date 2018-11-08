@@ -121,12 +121,18 @@ public class TicTacToe { //TODO: Possibly implement an interface for scores and 
 
     private void showBoard() {
         //TODO: Proper design
+        System.out.print(" \u2554\u2550\u2550\u2550\u2566\u2550\u2550\u2550\u2566\u2550\u2550\u2550\u2557 ");
         for (char i[] : board) {
-            for (char j : i) {
-                System.out.print(j + "|");//TODO: Parentheses for each
-            }
-            System.out.print("\b \n");
+            System.out.println("\n \u2551   \u2551   \u2551   \u2551"); //FIRST LINE OF A ROW
+
+            System.out.print(" \u2551");
+            for (char j : i)
+                System.out.print(" " + j + " \u2551");//TODO: Parentheses for each
+
+            System.out.println("\n \u2551   \u2551   \u2551   \u2551"); //THIRD LINE OF A ROW
+            System.out.print(" \u2560\u2550\u2550\u2550\u256C\u2550\u2550\u2550\u256C\u2550\u2550\u2550\u2563 ");
         }
+        System.out.println("\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b \u255A\u2550\u2550\u2550\u2569\u2550\u2550\u2550\u2569\u2550\u2550\u2550\u255D");
     }
 
     private boolean boardFilled() {
