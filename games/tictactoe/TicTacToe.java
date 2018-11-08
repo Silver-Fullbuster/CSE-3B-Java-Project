@@ -106,22 +106,72 @@ public class TicTacToe { //TODO: Possibly implement an interface for scores and 
         board[index / 3][index % 3] = OXChoice;
     }
 
+
     private void getComputerInput() { //TODO: Better logic
         int index;
+        do {
+            index = ThreadLocalRandom.current().nextInt(1, 10);
+            --index;
+        } while (board[index / 3][index % 3] != ' ');
+
         System.out.println("Computer playing move..");
         try {
             Thread.sleep(500);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        do {
-            index = ThreadLocalRandom.current().nextInt(0, 9);
-        } while (board[index / 3][index % 3] != ' ');
+        for (int i = 0; i < 3; i++) {
+            //Horizontal
+            if (board[i][0] == OXChoice && board[i][1] == OXChoice && board[i][2] == ' ') {
+                index = i * 3 + 3;
+                break;
+            }
+            if (board[i][1] == OXChoice && board[i][2] == OXChoice && board[i][0] == ' ') {
+                index = i * 3 + 1;
+                break;
+            }
+            if (board[i][0] == OXChoice && board[i][2] == OXChoice && board[i][1] == ' ') {
+                index = i * 3 + 2;
+                break;
+            }
+
+            // Vertical
+            if (board[0][i] == OXChoice && board[1][i] == OXChoice && board[2][i] == ' ') {
+                index = 7 + i;
+                break;
+            }
+            if (board[1][i] == OXChoice && board[2][i] == OXChoice && board[0][i] == ' ') {
+                index = 1 + i;
+                break;
+            }
+            if (board[0][i] == OXChoice && board[2][i] == OXChoice && board[1][i] == ' ') {
+                index = 4 + i;
+                break;
+            }
+        }
+
+        //Diagonal
+        if (board[0][0] == OXChoice && board[1][1] == OXChoice && board[3][3] == ' ')
+            index = 9;
+        else if (board[0][0] == OXChoice && board[2][2] == OXChoice && board[1][1] == ' ')
+            index = 5;
+        else if (board[1][1] == OXChoice && board[2][2] == OXChoice && board[0][0] == ' ')
+            index = 1;
+
+
+            //Reverse Diagonal
+        else if (board[0][2] == OXChoice && board[1][1] == OXChoice && board[2][0] == ' ')
+            index = 7;
+        else if (board[0][2] == OXChoice && board[2][0] == OXChoice && board[1][1] == ' ')
+            index = 5;
+        else if (board[1][1] == OXChoice && board[2][0] == OXChoice && board[0][2] == ' ')
+            index = 3;
+
+        --index;
         board[index / 3][index % 3] = OXChoice == 'O' ? 'X' : 'O';
     }
 
     private void showBoard() {
-        //TODO: Proper design
         int count = 1;
         System.out.print(" \u2554\u2550\u2550\u2550\u2566\u2550\u2550\u2550\u2566\u2550\u2550\u2550\u2557 ");
         for (char i[] : board) {
@@ -129,7 +179,7 @@ public class TicTacToe { //TODO: Possibly implement an interface for scores and 
 
             System.out.print(" \u2551");
             for (char j : i)
-                System.out.print(" " + j + " \u2551");//TODO: Parentheses for each
+                System.out.print(" " + j + " \u2551");
 
             System.out.println("\n \u2551  " + count++ + "\u2551  " + count++ + "\u2551  " + count++ + "\u2551"); //THIRD LINE OF A ROW
             System.out.print(" \u2560\u2550\u2550\u2550\u256C\u2550\u2550\u2550\u256C\u2550\u2550\u2550\u2563 ");
