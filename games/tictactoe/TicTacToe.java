@@ -110,7 +110,7 @@ public class TicTacToe { //TODO: Possibly implement an interface for scores and 
         int index;
         System.out.println("Computer playing move..");
         try {
-            Thread.sleep(1000);
+            Thread.sleep(500);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -122,6 +122,7 @@ public class TicTacToe { //TODO: Possibly implement an interface for scores and 
 
     private void showBoard() {
         //TODO: Proper design
+        int count = 1;
         System.out.print(" \u2554\u2550\u2550\u2550\u2566\u2550\u2550\u2550\u2566\u2550\u2550\u2550\u2557 ");
         for (char i[] : board) {
             System.out.println("\n \u2551   \u2551   \u2551   \u2551"); //FIRST LINE OF A ROW
@@ -130,7 +131,7 @@ public class TicTacToe { //TODO: Possibly implement an interface for scores and 
             for (char j : i)
                 System.out.print(" " + j + " \u2551");//TODO: Parentheses for each
 
-            System.out.println("\n \u2551   \u2551   \u2551   \u2551"); //THIRD LINE OF A ROW
+            System.out.println("\n \u2551  " + count++ + "\u2551  " + count++ + "\u2551  " + count++ + "\u2551"); //THIRD LINE OF A ROW
             System.out.print(" \u2560\u2550\u2550\u2550\u256C\u2550\u2550\u2550\u256C\u2550\u2550\u2550\u2563 ");
         }
         System.out.println("\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b \u255A\u2550\u2550\u2550\u2569\u2550\u2550\u2550\u2569\u2550\u2550\u2550\u255D");
