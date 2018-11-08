@@ -151,7 +151,7 @@ public class TicTacToe { //TODO: Possibly implement an interface for scores and 
         }
 
         //Diagonal
-        if (board[0][0] == OXChoice && board[1][1] == OXChoice && board[3][3] == ' ')
+        if (board[0][0] == OXChoice && board[1][1] == OXChoice && board[2][2] == ' ')
             index = 9;
         else if (board[0][0] == OXChoice && board[2][2] == OXChoice && board[1][1] == ' ')
             index = 5;
