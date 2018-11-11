@@ -22,7 +22,7 @@ public class Chess {
 	}
 	//Printing a simple, boring, non-fancy Chessboard
         
-	public static void printBoard(Pieces[][] chessboard) {
+	public void printBoard(Pieces[][] chessboard) {
 		char letter = 'a';
 		System.out.print(" ");
 		for (int l = 0; l < 8; l++) {                                                   //Printing letters
@@ -83,7 +83,7 @@ public class Chess {
 		}
 	}
 
-        public static void fillChessboard(Pieces[][] chessboard) {
+        public void fillChessboard(Pieces[][] chessboard) {
 		for (int i = 0; i < 8; i++) {
 			for (int j = 0; j < 8; j++) {
                             
