@@ -5,10 +5,6 @@ import static chess.Chess.move;
 import static chess.Chess.printBoard;
 import java.util.Scanner;
 
-/**
- *
- * @author kartikeyachaauhan
- */
 public class God {                                                                  
     	// MAIN METHOD
 	public static void main(String[] args) {
