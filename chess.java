@@ -1,7 +1,14 @@
 // Will Add Pieces using ASCII (already available there). 
 // Methods nearly ready; researching a few new things for now
 
-public class chess{
+package chess;
+
+import static chess.Chess.fillChessboard;
+import static chess.Chess.move;
+import static chess.Chess.printBoard;
+import java.util.Scanner;
+
+public class God {
 
 public static void main(String[] args) {
 		Scanner sc = new Scanner(System.in);
