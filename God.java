@@ -1,8 +1,6 @@
+
 package chess;
 
-import static chess.Chess.fillChessboard;
-import static chess.Chess.move;
-import static chess.Chess.printBoard;
 import java.util.Scanner;
 
 public class God {                                                                  
@@ -11,17 +9,20 @@ public class God {
 		Scanner sc = new Scanner(System.in);
 		Chess.Pieces[][] chessboard = new Chess.Pieces[8][8]; // creates chessboard
 		String move = "";
-                
-         //       System.out.println("Enter side: (w/b)");
-           //     String sidecolour=sc.next();
-   //             selectSide(chessboard, sidecolour);       //will rotate side before fillChessboard fills everything (or can add that functionality in fillChessboard)
-		fillChessboard(chessboard);
+                Chess chess = new Chess();
+                //       System.out.println("Enter side: (w/b)");
+                //     String sidecolour=sc.next();
+                //             selectSide(chessboard, sidecolour);
+                //will rotate side before fillChessboard fills everything (or can add that functionality in fillChessboard)
+                chess.printSquares();
+                chess.fillBoard(chessboard);
+                //	fillBoard(chessboard);
                 // Introduce Functionality for entering difficulty: will take game repositories from championship matches and simulate them
-		System.out.println("Input the moves in Standard Algebraic Notation (example: a2 to a3 for leftmost white pawn)”:\n");
-               // Introduce Functionality to re-assign valid moves (for creative game modes)
-               // Introduce hints functionality
+		System.out.println("\nInput the moves in Standard Algebraic Notation (example: a2 to a3 for leftmost white pawn)”:\n");
+                // Introduce Functionality to re-assign valid moves (for creative game modes)
+                // Introduce hints functionality
 		while(true){                            //condition to keep playing
-			printBoard(chessboard);
+			chess.printBoard(chessboard);
 			move = sc.nextLine();
 			
 			if (move.equals("exit")){
@@ -33,4 +34,5 @@ public class God {
 		}
 		
 	}
+        
 }
