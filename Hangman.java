@@ -3,61 +3,60 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class Hangman
 {
+	
+	private char[] secretWord;
+	private int wrongGuess;
+	private char letterGuessed;
+	private char[] wordGuessed;
+	private char[] lettersGuessed;
+
+	private void Hangman(){
+		secretWord = randomWord().toUpperCase().toCharArray();
+		wordGuessed =  new char[secretWord.length];
+		lettersGuessed = mew char[8];
+	}
+	
 	public static void launch()
 	{
-		Hangman obj=new Hangman();
-		//char[] secretWord=new char[20];
-		//System.out.println("enter secret word: ");
-		Scanner sc=new Scanner(System.in);
-		int i, count=0;
-		String word=obj.randomWord();
-		char[] secretWord=word.toUpperCase().toCharArray();
-		/*String inp;
-		inp=sc.next();
-		inp = inp.toUpperCase();
-		for(i=0; i<inp.length(); i++)
-		{
-			secretWord[i]=inp.charAt(i);
-			count++;
-		}*/
-		System.out.println("welcome to the hangman game!");
-		System.out.println("the word to be guessed is "+secretWord.length+" letters long" );
-		int wrongGuess=0;
-		System.out.println("ALL THE BEST!");
-		char letterGuessed;
-		char[] wordGuessed=new char[20];
-		System.out.println("word: ");
-		char temp;
-		for(i=0; i<secretWord.length; i++)
+		Hangman obj = new Hangman();
+	}
+
+	private void prepGame() {
+		
+		for(int i=0; i<secretWord.length; i++)
 		{
 			//to print all the vowels present in the word
-
 			if(secretWord[i]=='A'||secretWord[i]=='E'||secretWord[i]=='I'||secretWord[i]=='O'||secretWord[i]=='U')
 			{
 				wordGuessed[i]=secretWord[i];
 			}
 			else
-				wordGuessed[i]='_';
-			System.out.print(wordGuessed[i]+" ");	
+				wordGuessed[i]='_';	
 		}
-		System.out.println("");
+	}
+
+	private void startGame(){
+		Scanner sc = new Scanner(System.in);
+		System.out.println(	"Welcome to the Hangman Game!\n"
+						+	"The word to be guessed is " + secretWord.length + " letters long\n"
+						+	"ALL THE BEST!\n"
+						+	"\n"
+						+	"Word:");
+		for(char ch: wordGuessed)
+			System.out.print(wordGuessed[i]+" ");
+		System.out.println("\n");
+		int guessCount = 0;
 		while(wrongGuess<8)
 		{
-			System.out.println("guess the letter: ");
+			System.out.print("Guess the letter: ");
 			letterGuessed=sc.next().toUpperCase().charAt(0);
-			if(obj.isWordGuessed(secretWord, letterGuessed)==true)
-			{
-				for(i=0; i<secretWord.length; i++)
-				{
-					if(secretWord[i]==letterGuessed)
-					{
-						wordGuessed[i]=letterGuessed;
-					}
-				}
-				for(i=0; i<secretWord.length; i++)
-				{
-					System.out.print(wordGuessed[i]+" ");
-				}
+			lettersGuessed[guessCount++] = letterGuessed;
+			if(isLetterGuessed(secretWord, letterGuessed)) {
+				for(int i = 0; i < secretWord.length; i++)
+					if (secretWord[i] == letterGuessed)
+						wordGuessed[i] = letterGuessed;
+				for(int i = 0; i < secretWord.length; i++)
+					System.out.print(wordGuessed[i] + " ");
 				System.out.println("");
 				obj.diagram(wrongGuess, secretWord, secretWord.length);
 				if(obj.guessed(secretWord, wordGuessed, secretWord.length)==true)
@@ -76,7 +75,7 @@ public class Hangman
 	}
 
 
-	public boolean isWordGuessed(char[] secretWord, char letterGuessed)
+	public boolean isLetterGuessed(char[] secretWord, char letterGuessed)
 	{
 		//to check if the letter guessed is present in the word
 		//secretWord is the word to be guessed.
