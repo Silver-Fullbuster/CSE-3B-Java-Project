@@ -35,8 +35,12 @@ public class TicTacToe { //TODO: Possibly implement an interface for scores and 
             System.out.println("Do you want to play first?");
             tempInput = scanner.next().toUpperCase();
             obj.firstTurn = tempInput.equals("YES") || tempInput.equals("Y");
+            final long startTime = System.currentTimeMillis();
             obj.startGame();
-            System.out.println("Enter 'y' to play again, any other key will exit!"); //TODO: UX
+            final long stopTime = System.currentTimeMillis();
+            final float elapsedTime = (float) (stopTime - startTime) / 1000;
+            System.out.println("\nYou finished in " + elapsedTime + " seconds");
+            System.out.println("\nEnter 'y' to play again, any other key will exit!"); //TODO: UX
         } while (scanner.next().equals("y"));
     }
 
@@ -111,8 +115,7 @@ public class TicTacToe { //TODO: Possibly implement an interface for scores and 
         int index;
         do {
             index = ThreadLocalRandom.current().nextInt(1, 10);
-            --index;
-        } while (board[index / 3][index % 3] != ' ');
+        } while (board[(index-1) / 3][(index - 1) % 3] != ' ');
 
         System.out.println("Computer playing move..");
         try {
