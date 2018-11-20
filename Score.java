@@ -1,6 +1,6 @@
 public class Score {
-    private String name;
-    private float time;
+    protected String name;
+    protected float time;
 
     public Score(String name, float time) {
         this.name = name;
