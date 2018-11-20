@@ -1,8 +1,8 @@
 public class Score {
     private String name;
-    private int time;
+    private float time;
 
-    public Score(String name, int time) {
+    public Score(String name, float time) {
         this.name = name;
         this.time = time;
     }
@@ -11,7 +11,7 @@ public class Score {
         return name;
     }
 
-    public int getTime() {
+    public float getTime() {
         return time;
     }
 }
