@@ -1,7 +1,3 @@
-import games.tictactoe.TicTacToe;
-import games.chess.God;
-import games.hangman.Hangman;
-
 import java.util.Scanner;
 
 public class Main {
