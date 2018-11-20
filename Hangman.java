@@ -1,7 +1,7 @@
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class Hangman
+public class Hangman extends Score
 {
 	
 	private char[] secretWord;
@@ -10,18 +10,31 @@ public class Hangman
 	private char[] wordGuessed;
 	private char[] lettersGuessed;
 	private int guessCount=0;
+	private static Scanner sc;
+
+	static{
+		sc = new Scanner(System.in);
+	}
 
 	private Hangman(){
 		secretWord = randomWord().toUpperCase().toCharArray();
 		wordGuessed =  new char[secretWord.length];
 		lettersGuessed = new char[30];
+		Super(name, time);
 	}
 	
-	public static void launch()
+	public static void launch(HighScore scores)
 	{
 		Hangman obj = new Hangman();
 		obj.prepGame();
+		final int startTime = System.currentTimeMillis();
 		obj.startGame();
+		final int endTime = System.currentTimeMillis();
+		if(obj.guessed){
+			System.out.println("Enter name: ");
+			scores.addScore(new HangmanScore(sc.next(), endTime - startTime, wrongGuess));
+		}
+			
 	}
 
 	private void prepGame() {
@@ -47,7 +60,6 @@ public class Hangman
 					"|_| |_|\\__,_|_| |_|\\__, |_| |_| |_|\\__,_|_| |_|\n" +
 					"                    __/ |                      \n" +
 					"                   |___/                       \n");
-		Scanner sc = new Scanner(System.in);
 		System.out.println(	"Welcome to the Hangman Game!\n"
 						+	"The word to be guessed is " + secretWord.length + " letters long\n"
 						+	"ALL THE BEST!\n"
