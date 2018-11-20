@@ -13,12 +13,14 @@ public class Hangman
 	private void Hangman(){
 		secretWord = randomWord().toUpperCase().toCharArray();
 		wordGuessed =  new char[secretWord.length];
-		lettersGuessed = mew char[8];
+		lettersGuessed = new char[20];
 	}
 	
 	public static void launch()
 	{
 		Hangman obj = new Hangman();
+		obj.prepGame();
+		obj.startGame();
 	}
 
 	private void prepGame() {
@@ -27,9 +29,7 @@ public class Hangman
 		{
 			//to print all the vowels present in the word
 			if(secretWord[i]=='A'||secretWord[i]=='E'||secretWord[i]=='I'||secretWord[i]=='O'||secretWord[i]=='U')
-			{
 				wordGuessed[i]=secretWord[i];
-			}
 			else
 				wordGuessed[i]='_';	
 		}
@@ -42,15 +42,26 @@ public class Hangman
 						+	"ALL THE BEST!\n"
 						+	"\n"
 						+	"Word:");
-		for(char ch: wordGuessed)
+		for(int i=0; i<secretWord.length; i++)
 			System.out.print(wordGuessed[i]+" ");
 		System.out.println("\n");
 		int guessCount = 0;
+		wrongGuess=0;
 		while(wrongGuess<8)
 		{
+			boolean flag;
+			do{
+			flag=false;
 			System.out.print("Guess the letter: ");
 			letterGuessed=sc.next().toUpperCase().charAt(0);
+			for(int i=0; i<guessCount; i++){
+				if(lettersGuessed[i]==letterGuessed){
+					System.out.println("This letter has already been guessed, please try with another letter");
+					flag=true;
+				}
+			}
 			lettersGuessed[guessCount++] = letterGuessed;
+			}while(flag==true);
 			if(isLetterGuessed(secretWord, letterGuessed)) {
 				for(int i = 0; i < secretWord.length; i++)
 					if (secretWord[i] == letterGuessed)
@@ -58,8 +69,8 @@ public class Hangman
 				for(int i = 0; i < secretWord.length; i++)
 					System.out.print(wordGuessed[i] + " ");
 				System.out.println("");
-				obj.diagram(wrongGuess, secretWord, secretWord.length);
-				if(obj.guessed(secretWord, wordGuessed, secretWord.length)==true)
+				diagram(wrongGuess, secretWord, secretWord.length);
+				if(guessed(secretWord, wordGuessed, secretWord.length)==true)
 				{
 					System.out.println("hurray! you won");
 					break;
@@ -69,7 +80,7 @@ public class Hangman
 			{
 				System.out.println("oops! this letter is not present in the word");
 				wrongGuess++;
-				obj.diagram(wrongGuess, secretWord, secretWord.length);
+				diagram(wrongGuess, secretWord, secretWord.length);
 			}
 		}
 	}
