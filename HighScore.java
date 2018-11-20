@@ -10,7 +10,7 @@ public class HighScore {
     }
 
     private void displayScoreList() {
-        System.out.println("\tHIGH SCORES\n" +
+        System.out.println("\n\n\tHIGH SCORES\n" +
                 "\n" +
                 "Position\tNAME\tTIME\n");
         int count = 0;
