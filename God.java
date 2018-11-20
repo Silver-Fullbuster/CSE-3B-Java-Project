@@ -36,6 +36,24 @@ class Code{
 	}
 }
 
+class ChessScore extends Score{
+	super(name,time);
+	String w="win", l="loss";
+	ChessScore{
+		this.name=name;
+		this.time=time;
+	}
+	public void setWinner(String player){    
+		this.name=player;
+	}
+	public void setLoser(String player){
+		this.name=player;
+	}
+	public void setTime(float time){
+		this.time=time;
+	}
+}
+
 class Chess {
 
 	public enum Pieces {
@@ -362,9 +380,11 @@ public class God{
 		//Player Entries
 		Player player=new Player();
 		System.out.println("\nEnter player 1 name (white): ");
-		player.SetWhite(sc.next());
+		String p1=sc.next();
+		player.SetWhite(p1);
 		System.out.println("Enter player 2 name (black): ");
-		player.SetBlack(sc.next());
+		String p2=sc.next();
+		player.SetBlack(p2);
 
 		final long startTime = System.currentTimeMillis();  //Timer Starts
 
@@ -386,6 +406,14 @@ public class God{
 		
 		final long endTime = System.currentTimeMillis();   //Timer Ends
 		System.out.println("Time taken to complete: " + (endTime - startTime)/1000+ "seconds");
+
+		String winner=p1;
+
+		ChessScore score=new Score();
+		score.setWinner(p1);
+		score.setLoser(p2);
+		score.setTime((endTime-startTime)/1000);
+
 	
 	}
 
