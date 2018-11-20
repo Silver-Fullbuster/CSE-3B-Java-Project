@@ -6,15 +6,18 @@ public class HighScore {
 
     public void addScore(Score score) {
         scoreList.add(score);
-        scoreList.sort(Comparator.comparingInt(Score::getTime));
+        scoreList.sort((a, b) -> {
+            float temp = a.getTime() - b.getTime();
+            return (int) temp;
+        });
     }
 
-    private void displayScoreList() {
-        System.out.println("\n\n\tHIGH SCORES\n" +
+    public void displayScoreList() {
+        System.out.println("\tHIGH SCORES\n" +
                 "\n" +
-                "Position\tNAME\tTIME\n");
+                "POS\tNAME\tTIME\tEXTRA\n");
         int count = 0;
         for(Score sc : scoreList)
-            System.out.println(++count + "\t" + sc.getName() +"\t" + sc.getTime());
+            System.out.println(++count + "\t" + sc.getScore());
     }
 }

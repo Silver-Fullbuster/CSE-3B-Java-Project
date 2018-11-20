@@ -14,4 +14,8 @@ public class Score {
     public float getTime() {
         return time;
     }
+
+    public String getScore(){
+        return name +"\t" + time;
+    }
 }
