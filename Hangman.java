@@ -9,11 +9,12 @@ public class Hangman
 	private char letterGuessed;
 	private char[] wordGuessed;
 	private char[] lettersGuessed;
+	private int guessCount=0;
 
-	private void Hangman(){
+	private Hangman(){
 		secretWord = randomWord().toUpperCase().toCharArray();
 		wordGuessed =  new char[secretWord.length];
-		lettersGuessed = new char[20];
+		lettersGuessed = new char[30];
 	}
 	
 	public static void launch()
@@ -28,14 +29,24 @@ public class Hangman
 		for(int i=0; i<secretWord.length; i++)
 		{
 			//to print all the vowels present in the word
-			if(secretWord[i]=='A'||secretWord[i]=='E'||secretWord[i]=='I'||secretWord[i]=='O'||secretWord[i]=='U')
+			if(secretWord[i]=='A'||secretWord[i]=='E'||secretWord[i]=='I'||secretWord[i]=='O'||secretWord[i]=='U'){
 				wordGuessed[i]=secretWord[i];
+				lettersGuessed[guessCount++]=secretWord[i];
+			}
 			else
 				wordGuessed[i]='_';	
 		}
 	}
 
 	private void startGame(){
+		System.out.print(	" _                                             \n" +
+					"| |                                            \n" +
+					"| |__   __ _ _ __   __ _ _ __ ___   __ _ _ __  \n" +
+					"| '_ \\ / _` | '_ \\ / _` | '_ ` _ \\ / _` | '_ \\ \n" +
+					"| | | | (_| | | | | (_| | | | | | | (_| | | | |\n" +
+					"|_| |_|\\__,_|_| |_|\\__, |_| |_| |_|\\__,_|_| |_|\n" +
+					"                    __/ |                      \n" +
+					"                   |___/                       \n");
 		Scanner sc = new Scanner(System.in);
 		System.out.println(	"Welcome to the Hangman Game!\n"
 						+	"The word to be guessed is " + secretWord.length + " letters long\n"
@@ -45,7 +56,6 @@ public class Hangman
 		for(int i=0; i<secretWord.length; i++)
 			System.out.print(wordGuessed[i]+" ");
 		System.out.println("\n");
-		int guessCount = 0;
 		wrongGuess=0;
 		while(wrongGuess<8)
 		{
@@ -58,6 +68,7 @@ public class Hangman
 				if(lettersGuessed[i]==letterGuessed){
 					System.out.println("This letter has already been guessed, please try with another letter");
 					flag=true;
+					break;
 				}
 			}
 			lettersGuessed[guessCount++] = letterGuessed;
@@ -107,43 +118,86 @@ public class Hangman
 		//to print the hangman diagram
 		switch(wrongGuess)
 		{
-			case 0: break;
-			case 1: System.out.println(" ( ");
+			case 0:  System.out.println( " _______  \n"+
+                                        " |/      | \n"+
+                                        " |         \n"+
+                                        " |         \n"+
+                                        " |         \n"+
+                                        " |         \n"+
+                                        " |         \n"+
+                                        "_|___      \n");
 					break;
-			case 2: System.out.println(" ( )");
+			case 1: System.out.println( " _______   \n"+
+                                        " |/      | \n"+
+                                        " |      (  \n"+
+                                        " |         \n"+
+                                        " |         \n"+
+                                        " |         \n"+
+                                        " |         \n"+
+                                        "_|___      \n");
 					break;
-			case 3: System.out.println(	" ( )\n" +
-										"  |");
+			case 2:System.out.println( " _______    \n"+
+                                        " |/      | \n"+
+                                        " |      (_)\n"+
+                                        " |         \n"+
+                                        " |         \n"+
+                                        " |         \n"+
+                                        " |         \n"+
+                                        "_|___      \n");
 					break;
-			case 4: System.out.println(	" ( )\n" +
-										"  |\n"	+
-										" / ");
+			case 3: System.out.println( " _______   \n"+
+                                        " |/      | \n"+
+                                        " |      (_)\n"+
+                                        " |      \\ \n"+
+                                        " |         \n"+
+                                        " |         \n"+
+                                        " |         \n"+
+                                        "_|___      \n");
 					break;
-			case 5: System.out.println(" ( )");
-					System.out.println("  |");
-					System.out.print(" / ");
-					System.out.println("\\");
+			case 4: System.out.println( " _______   \n"+
+                                        " |/      | \n"+
+                                        " |      (_)\n"+
+                                        " |      \\|\n"+
+                                        " |         \n"+
+                                        " |         \n"+
+                                        " |         \n"+
+                                        "_|___      \n");
 					break;
-			case 6: System.out.println(" ( )");
-					System.out.println("  |");
-					System.out.print(" / ");
-					System.out.println("\\");
-					System.out.println("  |");
+			case 5: System.out.println( " _______   \n"+
+                                        " |/      | \n"+
+                                        " |      (_)\n"+
+                                        " |      \\|/\n"+
+                                        " |         \n"+
+                                        " |         \n"+
+                                        " |         \n"+
+                                        "_|___      \n");
 					break;
-			case 7: System.out.println(" ( )");
-					System.out.println("  |");
-					System.out.print(" / ");
-					System.out.println("\\");
-					System.out.println("  |");
-					System.out.println(" / ");
+			case 6:  System.out.println( " _______   \n"+
+                                         " |/      | \n"+
+                                         " |      (_)\n"+
+                                         " |      \\|/\n"+
+                                         " |       | \n"+
+                                         " |         \n"+
+                                         " |         \n"+
+                                         "_|___      \n");
 					break;
-			case 8: System.out.println(" ( )");
-					System.out.println("  |");
-					System.out.print(" / ");
-					System.out.println("\\");
-					System.out.println("  |");
-					System.out.print(" / ");
-					System.out.println("\\");
+			case 7: System.out.println( " _______   \n"+
+                     				    " |/      | \n"+
+                                        " |      (_)\n"+
+                                        " |      \\|/\n"+
+                                        " |       | \n"+
+                                        " |      /  \n"+
+                                        " |         \n"+
+                                        "_|___      \n");
+					break;
+			case 8:  System.out.println( " _______   \n"+
+                                         " |/      | \n"+
+                                         " |      (_)\n"+
+                                         " |      \\|/\n"+
+                                         " |       | \n"+
+                                         " |      / \\\n"+
+                                         " |         \n"+
+                                         "_|___      \n");
 					System.out.print("Sorry, you ran out of guesses. The answer is: ");
 					for(int i=0; i<count; i++)
 					{
