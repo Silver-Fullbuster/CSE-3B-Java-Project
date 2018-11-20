@@ -8,7 +8,7 @@ public class Main {
 				"2. Hangman\n" +
 				"3. Tic Tac Toe\n" +
 				"4. Exit\n" +
-				"\n"
+				"\n" +
 				"Enter choice: ");
 		int choice = scanner.nextInt();
 		switch(choice) {
