@@ -11,9 +11,9 @@
 
 class ChessScore extends Score{
         
-	int elo;
+	float elo;
         
-	public ChessScore(String name, float time, int elo){
+	public ChessScore(String name, float time, float elo){
             super(name, time);
             this.elo = elo;
 	} //Add number of pieces left
