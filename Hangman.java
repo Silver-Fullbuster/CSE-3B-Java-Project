@@ -20,19 +20,18 @@ public class Hangman
 		secretWord = randomWord().toUpperCase().toCharArray();
 		wordGuessed =  new char[secretWord.length];
 		lettersGuessed = new char[30];
-		Super(name, time);
 	}
 	
 	public static void launch(HighScore scores)
 	{
 		Hangman obj = new Hangman();
 		obj.prepGame();
-		final int startTime = System.currentTimeMillis();
+		final long startTime = System.currentTimeMillis();
 		obj.startGame();
-		final int endTime = System.currentTimeMillis();
-		if(obj.guessed){
+		final long endTime = System.currentTimeMillis();
+		if(obj.guessed()){
 			System.out.println("Enter name: ");
-			scores.addScore(new HangmanScore(sc.next(), endTime - startTime, wrongGuess));
+			scores.addScore(new HangmanScore(sc.next(), endTime - startTime, obj.wrongGuess));
 		}
 			
 	}
@@ -93,7 +92,7 @@ public class Hangman
 					System.out.print(wordGuessed[i] + " ");
 				System.out.println("");
 				diagram(wrongGuess, secretWord, secretWord.length);
-				if(guessed(secretWord, wordGuessed, secretWord.length)==true)
+				if(guessed())
 				{
 					System.out.println("hurray! you won");
 					break;
@@ -218,10 +217,10 @@ public class Hangman
 					break;
 		}
 	}
-	public boolean guessed(char[] secretWord, char[] wordGuessed, int count)
+	public boolean guessed()
 	{
 		boolean flag1=true;
-		for(int i=0; i<count; i++)
+		for(int i=0; i<secretWord.length; i++)
 		{
 			if(secretWord[i]!=wordGuessed[i])
 			{
