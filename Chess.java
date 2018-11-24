@@ -8,6 +8,9 @@
  *
  * @author kartikeyachaauhan
  */
+
+
+
 public class Chess{
 
 	public enum Pieces {
@@ -163,7 +166,8 @@ public class Chess{
 
 	//Printing Error messages instead of Exception Handling because it's all under an infinite While Loop
 
-	public void move(Pieces[][] chessboard, String move) {
+/*	synchronized*/ public void move(Pieces[][] chessboard, String move) {
+            
 		String[] components = move.split(" ");					//Breaks Standard notation into each character
 		
 		if (components.length > 3){								//For incorrect notation
@@ -171,7 +175,7 @@ public class Chess{
 		}
 		else if (components[0].length() != 2 || components[2].length() != 2){     //For incomplete notation
 			System.err.println("\nPlease provide valid move!\n");
-		}
+        	}
 		else if (components[0].charAt(0) < 'a' || components[0].charAt(0) > 'h' || components[0].charAt(1) < '1' || components[0].charAt(1) > '8' ){
 			System.err.println("\nPlease provide valid move!\n");
 		}
@@ -187,15 +191,18 @@ public class Chess{
                     int nCol = components[2].charAt(0) - 97;
                     int nRow = Math.abs(components[2].charAt(1) - 49-7);
 		
-                    System.out.println(col+ " " + row + " " + nCol + " " + nRow);
-                    if (isValid(chessboard, row, col, nRow, nCol)){						//Valid moves
+                //    System.out.println(col+ " " + row + " " + nCol + " " + nRow);     //Test-printing to keep checking for correct moves
+                    if (isValid(chessboard, row, col, nRow, nCol)){			//Check fo Valid moves
                       	chessboard[nRow][+nCol] = chessboard[row][+col];
-                        chessboard[row][+col] = Pieces.EMPTY;
+                //      chessboard[nRow][+nCol] = chessboard[row][+col];
+                //      chessboard[row][+col] = Pieces.EMPTY;
+                        chessboard[row][col] = Pieces.EMPTY;
                     }
                     else
-						System.err.println("Illegal Move");  //AHA
+			System.err.println("Illegal Move");  //AHA
 
                 }
+//               notify();
 	}
 
 	
@@ -204,7 +211,16 @@ public class Chess{
 		switch (chessboard[row][col]) {
 			
 			case BLACK_PAWN:
-				if (chessboard[nRow][nCol] != Pieces.EMPTY && (nCol == col + 1 || nCol == col - 1) ){
+                                if(chessboard[nRow][nCol] == Pieces.BLACK_PAWN || 
+                                        chessboard[nRow][nCol] == Pieces.BLACK_ROOK ||
+                                        chessboard[nRow][nCol] == Pieces.BLACK_BISHOP ||
+                                        chessboard[nRow][nCol] == Pieces.BLACK_KNIGHT ||
+                                        chessboard[nRow][nCol] == Pieces.BLACK_QUEEN || 
+                                        chessboard[nRow][nCol] == Pieces.BLACK_KING)
+                                        
+                                            return false;
+                                
+                                else if (chessboard[nRow][nCol] != Pieces.EMPTY && (nCol == col + 1 || nCol == col - 1) ){
 					return true;
 				}
 				else if ( chessboard[nRow][nCol] != Pieces.EMPTY ){
@@ -213,10 +229,20 @@ public class Chess{
 				else if ( row + 1 == nRow || (row == 1 && row + 2 == nRow)){
 					return true;
 				}
+                                
 				break;
 
 			case WHITE_PAWN:
-				if (chessboard[nRow][nCol] != Pieces.EMPTY && (nCol == col + 1 || nCol == col - 1) ){
+                                if(chessboard[nRow][nCol] == Pieces.WHITE_PAWN || 
+                                        chessboard[nRow][nCol] == Pieces.WHITE_ROOK ||
+                                        chessboard[nRow][nCol] == Pieces.WHITE_BISHOP ||
+                                        chessboard[nRow][nCol] == Pieces.WHITE_KNIGHT ||
+                                        chessboard[nRow][nCol] == Pieces.WHITE_QUEEN || 
+                                        chessboard[nRow][nCol] == Pieces.WHITE_KING)
+                                        
+                                                return false;
+                                
+                                else if (chessboard[nRow][nCol] != Pieces.EMPTY && (nCol == col + 1 || nCol == col - 1) ){
 					return true;
 				}
 				else if ( chessboard[nRow][nCol] != Pieces.EMPTY ){
@@ -228,74 +254,252 @@ public class Chess{
 				break;
 
 			case BLACK_ROOK:
-				if ((chessboard[nRow][nCol] == Pieces.WHITE_ROOK ||
+                                if((chessboard[nRow][nCol] == Pieces.BLACK_PAWN || 
+                                        chessboard[nRow][nCol] == Pieces.BLACK_ROOK ||
+                                        chessboard[nRow][nCol] == Pieces.BLACK_BISHOP ||
+                                        chessboard[nRow][nCol] == Pieces.BLACK_KNIGHT ||
+                                        chessboard[nRow][nCol] == Pieces.BLACK_QUEEN || 
+                                        chessboard[nRow][nCol] == Pieces.BLACK_KING)
+                                        &&// (chessboard[row-1][col] != Pieces.EMPTY)) 
+                                            (chessboard[nRow][nCol] != Pieces.EMPTY))
+                                            return false;
+                                
+                                else if ((chessboard[nRow][nCol] == Pieces.WHITE_ROOK ||
 					 chessboard[nRow][nCol] == Pieces.WHITE_KNIGHT ||
 					 chessboard[nRow][nCol] == Pieces.WHITE_BISHOP ||
 					 chessboard[nRow][nCol] == Pieces.WHITE_QUEEN ||
 					 chessboard[nRow][nCol] == Pieces.WHITE_KING || 
-               	                  chessboard[nRow][nCol] == Pieces.EMPTY )
+                                         chessboard[nRow][nCol] == Pieces.EMPTY )
 					 && (nCol == col || nRow == row) ){
 					return true;
 					}
+                                
+                          
 				break;
 
 			case WHITE_ROOK:
-				if ((chessboard[nRow][nCol] == Pieces.BLACK_ROOK ||
+                                if((chessboard[nRow][nCol] == Pieces.WHITE_PAWN || 
+                                        chessboard[nRow][nCol] == Pieces.WHITE_ROOK ||
+                                        chessboard[nRow][nCol] == Pieces.WHITE_BISHOP ||
+                                        chessboard[nRow][nCol] == Pieces.WHITE_KNIGHT ||
+                                        chessboard[nRow][nCol] == Pieces.WHITE_QUEEN || 
+                                        chessboard[nRow][nCol] == Pieces.WHITE_KING)
+                                        &&// (chessboard[row+1][col] != Pieces.EMPTY))
+                                            (chessboard[nRow][nCol] != Pieces.EMPTY))
+                                            return false;
+                                
+				else if ((chessboard[nRow][nCol] == Pieces.BLACK_ROOK ||
 					 chessboard[nRow][nCol] == Pieces.BLACK_KNIGHT ||
 					 chessboard[nRow][nCol] == Pieces.BLACK_BISHOP ||
 					 chessboard[nRow][nCol] == Pieces.BLACK_QUEEN ||
 					 chessboard[nRow][nCol] == Pieces.BLACK_KING || 
-    	             chessboard[nRow][nCol] == Pieces.EMPTY) // ||
-				//	 chessboard[nRow][nCol] == Pieces.BLACK_PAWN)
-					 && (nCol == col || nRow == row) ){
+                                         chessboard[nRow][nCol] == Pieces.EMPTY ||
+					 chessboard[nRow][nCol] == Pieces.BLACK_PAWN)
+					 &&/* (nCol == col || nRow == row) ){*/
+                                            (chessboard[nRow][nCol] != Pieces.EMPTY))
 						return true;
-				}
+				
+                                
 				break;
 
 			case BLACK_KNIGHT:
+                                if((chessboard[nRow][nCol] == Pieces.BLACK_PAWN || 
+                                        chessboard[nRow][nCol] == Pieces.BLACK_ROOK ||
+                                        chessboard[nRow][nCol] == Pieces.BLACK_BISHOP ||
+                                        chessboard[nRow][nCol] == Pieces.BLACK_KNIGHT ||
+                                        chessboard[nRow][nCol] == Pieces.BLACK_QUEEN || 
+                                        chessboard[nRow][nCol] == Pieces.BLACK_KING)
+                                        &&/* (chessboard[row-1][col] != Pieces.EMPTY ||
+                                            chessboard[row][col-1] != Pieces.EMPTY || 
+                                            chessboard[row][col+1] != Pieces.EMPTY))*/
+                                            (chessboard[nRow][nCol] != Pieces.EMPTY))
+                                            return false;           
+                                
+                                else if((chessboard[nRow][nCol] == Pieces.WHITE_BISHOP ||
+                                         chessboard[nRow][nCol] == Pieces.WHITE_KING ||
+                                         chessboard[nRow][nCol] == Pieces.WHITE_KNIGHT ||
+                                         chessboard[nRow][nCol] == Pieces.WHITE_PAWN ||
+                                         chessboard[nRow][nCol] == Pieces.WHITE_QUEEN ||
+                                         chessboard[nRow][nCol] == Pieces.WHITE_ROOK ||
+                                         chessboard[nRow][nCol] == Pieces.EMPTY)
+                                         && ((nCol == col + 1 && nRow == row + 2) || (nRow == row + 1 && nCol == col + 2)) )
+                                                return true;
+                                    
+                                
+                                break;        
+                                        
 			case WHITE_KNIGHT:
+                                if((chessboard[nRow][nCol] == Pieces.WHITE_PAWN || 
+                                        chessboard[nRow][nCol] == Pieces.WHITE_ROOK ||
+                                        chessboard[nRow][nCol] == Pieces.WHITE_BISHOP ||
+                                        chessboard[nRow][nCol] == Pieces.WHITE_KNIGHT ||
+                                        chessboard[nRow][nCol] == Pieces.WHITE_QUEEN || 
+                                        chessboard[nRow][nCol] == Pieces.WHITE_KING)
+                                        &&/* (chessboard[row+1][col] != Pieces.EMPTY ||
+                                            chessboard[row][col-1] != Pieces.EMPTY || 
+                                            chessboard[row][col+1] != Pieces.EMPTY)) */
+                                        (chessboard[nRow][nCol]!=Pieces.EMPTY))
+                                            return false;
+                                
+                                else if((chessboard[nRow][nCol] == Pieces.BLACK_BISHOP ||
+                                         chessboard[nRow][nCol] == Pieces.BLACK_KING ||
+                                         chessboard[nRow][nCol] == Pieces.BLACK_KNIGHT ||
+                                         chessboard[nRow][nCol] == Pieces.BLACK_PAWN ||
+                                         chessboard[nRow][nCol] == Pieces.BLACK_QUEEN ||
+                                         chessboard[nRow][nCol] == Pieces.BLACK_ROOK ||
+                                         chessboard[nRow][nCol] == Pieces.EMPTY)
+                                         && ((nCol == col + 1 && nRow == row + 2) || (nRow == row + 1 && nCol == col + 2) ) ){
+                                                return true;
+                                }
+                                
 				break;
 
 			case BLACK_BISHOP:
+                                if((chessboard[nRow][nCol] == Pieces.BLACK_PAWN || 
+                                        chessboard[nRow][nCol] == Pieces.BLACK_ROOK ||
+                                        chessboard[nRow][nCol] == Pieces.BLACK_BISHOP ||
+                                        chessboard[nRow][nCol] == Pieces.BLACK_KNIGHT ||
+                                        chessboard[nRow][nCol] == Pieces.BLACK_QUEEN || 
+                                        chessboard[nRow][nCol] == Pieces.BLACK_KING)
+                                        &&/* (chessboard[row-1][col] != Pieces.EMPTY ||
+                                            chessboard[row][col-1] != Pieces.EMPTY || 
+                                            chessboard[row][col+1] != Pieces.EMPTY))*/
+                                            (chessboard[nRow][nCol] != Pieces.EMPTY))
+                                            return false;
+                                
+                                else if ((chessboard[nRow][nCol] == Pieces.WHITE_ROOK ||
+                                         chessboard[nRow][nCol] == Pieces.WHITE_KNIGHT ||
+                                         chessboard[nRow][nCol] == Pieces.WHITE_BISHOP ||
+                                         chessboard[nRow][nCol] == Pieces.WHITE_QUEEN ||
+                                         chessboard[nRow][nCol] == Pieces.WHITE_KING || 
+	                                 chessboard[nRow][nCol] == Pieces.EMPTY)
+                                         && (nCol > col || nRow > row || nCol < col || nRow < row) ) //correct diagonal moves
+                                                return true;
+                                
+                              
+                                break;
+                                
 			case WHITE_BISHOP:
+                                if((chessboard[nRow][nCol] == Pieces.WHITE_PAWN || 
+                                        chessboard[nRow][nCol] == Pieces.WHITE_ROOK ||
+                                        chessboard[nRow][nCol] == Pieces.WHITE_BISHOP ||
+                                        chessboard[nRow][nCol] == Pieces.WHITE_KNIGHT ||
+                                        chessboard[nRow][nCol] == Pieces.WHITE_QUEEN || 
+                                        chessboard[nRow][nCol] == Pieces.WHITE_KING)
+                                        &&/* (chessboard[row+1][col] != Pieces.EMPTY ||
+                                            chessboard[row][col-1] != Pieces.EMPTY || 
+                                            chessboard[row][col+1] != Pieces.EMPTY)) */
+                                        (chessboard[nRow][nCol]!=Pieces.EMPTY))
+                                            return false;
+                                
+                                else if ((chessboard[nRow][nCol] == Pieces.BLACK_ROOK ||
+                                         chessboard[nRow][nCol] == Pieces.BLACK_KNIGHT ||
+                                         chessboard[nRow][nCol] == Pieces.BLACK_BISHOP ||
+                                         chessboard[nRow][nCol] == Pieces.BLACK_QUEEN ||
+                                         chessboard[nRow][nCol] == Pieces.BLACK_KING || 
+	                                 chessboard[nRow][nCol] == Pieces.EMPTY)
+                                         && (nCol > col || nRow > row || nCol < col || nRow < row) ){ //corret diagonal moves
+                                                return true;
+                                
+                                }
+                                
 				break;
-
+                        
 			case BLACK_QUEEN:
-				if ((chessboard[nRow][nCol] == Pieces.WHITE_ROOK ||
-				 chessboard[nRow][nCol] == Pieces.WHITE_KNIGHT ||
-				 chessboard[nRow][nCol] == Pieces.WHITE_BISHOP ||
-				 chessboard[nRow][nCol] == Pieces.WHITE_QUEEN ||
-				 chessboard[nRow][nCol] == Pieces.WHITE_KING || 
-	                         chessboard[nRow][nCol] == Pieces.EMPTY)
-				 && (nCol == col || nRow == row || nCol == col-1 || 
-	                             nRow == row+1 || nRow == row || nRow == row-1)){
+                                if((chessboard[nRow][nCol] == Pieces.BLACK_PAWN || 
+                                        chessboard[nRow][nCol] == Pieces.BLACK_ROOK ||
+                                        chessboard[nRow][nCol] == Pieces.BLACK_BISHOP ||
+                                        chessboard[nRow][nCol] == Pieces.BLACK_KNIGHT ||
+                                        chessboard[nRow][nCol] == Pieces.BLACK_QUEEN || 
+                                        chessboard[nRow][nCol] == Pieces.BLACK_KING)
+                                        &&/* (chessboard[row-1][col] != Pieces.EMPTY ||
+                                            chessboard[row][col-1] != Pieces.EMPTY || 
+                                            chessboard[row][col+1] != Pieces.EMPTY))*/
+                                            (chessboard[nRow][nCol] != Pieces.EMPTY))
+                                            return false;
+                                
+                                else if ((chessboard[nRow][nCol] == Pieces.WHITE_ROOK ||
+                                         chessboard[nRow][nCol] == Pieces.WHITE_KNIGHT ||
+                                         chessboard[nRow][nCol] == Pieces.WHITE_BISHOP ||
+                                         chessboard[nRow][nCol] == Pieces.WHITE_QUEEN ||
+                                         chessboard[nRow][nCol] == Pieces.WHITE_KING || 
+                                         chessboard[nRow][nCol] == Pieces.EMPTY)
+                                         && (nCol == col || nRow == row || nCol > col || nRow > row || nCol < col || nRow < row))   //correct diagonal moves
 					return true;
-				}
+                                
+				
 				break;
 
 			case WHITE_QUEEN:
+                                if((chessboard[nRow][nCol] == Pieces.WHITE_PAWN || 
+                                        chessboard[nRow][nCol] == Pieces.WHITE_ROOK ||
+                                        chessboard[nRow][nCol] == Pieces.WHITE_BISHOP ||
+                                        chessboard[nRow][nCol] == Pieces.WHITE_KNIGHT ||
+                                        chessboard[nRow][nCol] == Pieces.WHITE_QUEEN || 
+                                        chessboard[nRow][nCol] == Pieces.WHITE_KING)
+                                        &&/* (chessboard[row+1][col] != Pieces.EMPTY ||
+                                            chessboard[row][col-1] != Pieces.EMPTY || 
+                                            chessboard[row][col+1] != Pieces.EMPTY)) */
+                                        (chessboard[nRow][nCol]!=Pieces.EMPTY))
+                                            return false;
+                                
+                                else if ((chessboard[nRow][nCol] == Pieces.BLACK_ROOK ||
+                                         chessboard[nRow][nCol] == Pieces.BLACK_KNIGHT ||
+                                         chessboard[nRow][nCol] == Pieces.BLACK_BISHOP ||
+                                         chessboard[nRow][nCol] == Pieces.BLACK_QUEEN ||
+                                         chessboard[nRow][nCol] == Pieces.BLACK_KING || 
+                                         chessboard[nRow][nCol] == Pieces.EMPTY)
+                                         && (nCol == col || nRow == row || nCol > col || nRow > row || nCol < col || nRow < row)){   //correct diagonal moves
+					return true;
+				}
+                                
 				break;
 
 			case BLACK_KING:
-				if ((chessboard[nRow][nCol] == Pieces.WHITE_ROOK ||
-				 chessboard[nRow][nCol] == Pieces.WHITE_KNIGHT ||
-				 chessboard[nRow][nCol] == Pieces.WHITE_BISHOP ||
-				 chessboard[nRow][nCol] == Pieces.WHITE_QUEEN ||
-				 chessboard[nRow][nCol] == Pieces.WHITE_KING || 
-   	                     chessboard[nRow][nCol] == Pieces.EMPTY)
-				 && (( nCol == col+1 || nCol == col || nCol == col-1 ) && ( nRow == row+1 || nRow == row || nRow == row-1 ))){
+                                if((chessboard[nRow][nCol] == Pieces.BLACK_PAWN || 
+                                        chessboard[nRow][nCol] == Pieces.BLACK_ROOK ||
+                                        chessboard[nRow][nCol] == Pieces.BLACK_BISHOP ||
+                                        chessboard[nRow][nCol] == Pieces.BLACK_KNIGHT ||
+                                        chessboard[nRow][nCol] == Pieces.BLACK_QUEEN || 
+                                        chessboard[nRow][nCol] == Pieces.BLACK_KING)
+                                        &&/* (chessboard[row-1][col] != Pieces.EMPTY ||
+                                            chessboard[row][col-1] != Pieces.EMPTY || 
+                                            chessboard[row][col+1] != Pieces.EMPTY))*/
+                                            (chessboard[nRow][nCol] != Pieces.EMPTY))
+                                            return false;
+                                
+                                else if ((chessboard[nRow][nCol] == Pieces.WHITE_ROOK ||
+                                         chessboard[nRow][nCol] == Pieces.WHITE_KNIGHT ||
+                                         chessboard[nRow][nCol] == Pieces.WHITE_BISHOP ||
+                                         chessboard[nRow][nCol] == Pieces.WHITE_QUEEN ||
+                                         chessboard[nRow][nCol] == Pieces.WHITE_KING || 
+                                         chessboard[nRow][nCol] == Pieces.EMPTY)
+                                         && (( nCol == col+1 || nCol == col || nCol == col-1 ) && ( nRow == row+1 || nRow == row || nRow == row-1 ))){
 					return true;
 				}
+                                
 				break;
-
+                              
 			case WHITE_KING:
-				if ((chessboard[nRow][nCol] == Pieces.BLACK_ROOK ||
-				 chessboard[nRow][nCol] == Pieces.BLACK_KNIGHT ||
-				 chessboard[nRow][nCol] == Pieces.BLACK_BISHOP ||
-				 chessboard[nRow][nCol] == Pieces.BLACK_QUEEN ||
-				 chessboard[nRow][nCol] == Pieces.BLACK_KING || 
-                                 chessboard[nRow][nCol] == Pieces.EMPTY)
-				 && (( nCol == col+1 || 
+                                if((chessboard[nRow][nCol] == Pieces.WHITE_PAWN ||         //working
+                                        chessboard[nRow][nCol] == Pieces.WHITE_ROOK ||
+                                        chessboard[nRow][nCol] == Pieces.WHITE_BISHOP ||
+                                        chessboard[nRow][nCol] == Pieces.WHITE_KNIGHT ||
+                                        chessboard[nRow][nCol] == Pieces.WHITE_QUEEN || 
+                                        chessboard[nRow][nCol] == Pieces.WHITE_KING) 
+                                   &&/* (chessboard[row+1][col] != Pieces.EMPTY ||
+                                            chessboard[row][col-1] != Pieces.EMPTY || 
+                                            chessboard[row][col+1] != Pieces.EMPTY)) */
+                                        (chessboard[nRow][nCol]!=Pieces.EMPTY))
+                                            return false;                                           
+                                
+                                else if ((chessboard[nRow][nCol] == Pieces.BLACK_ROOK ||
+                                         chessboard[nRow][nCol] == Pieces.BLACK_KNIGHT ||
+                                         chessboard[nRow][nCol] == Pieces.BLACK_BISHOP ||
+                                         chessboard[nRow][nCol] == Pieces.BLACK_QUEEN ||
+                                         chessboard[nRow][nCol] == Pieces.BLACK_KING || 
+                                         chessboard[nRow][nCol] == Pieces.EMPTY)
+                                    && (( nCol == col+1 || 
                                        nCol == col || 
                                        nCol == col-1 ) 
                                                        && 
@@ -304,7 +508,9 @@ public class Chess{
                                                            nRow == row-1 ))){
                                                                 return true;
                                                            }
-				break;	
+                                
+				break;
+                                
 
 			case EMPTY:
 				return false;		

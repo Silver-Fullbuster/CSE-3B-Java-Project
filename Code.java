@@ -24,7 +24,7 @@ public class Code {
 "\t\t\t\t/________\\       \n");
 	
 		System.out.println("\"If the king does not lead, how can he expect his subordinates to follow?\"");
+                System.out.println("(In this game, the king dies by the same rules as his pawns)");
 
 	}
 }
-

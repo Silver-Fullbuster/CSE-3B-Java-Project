@@ -1,7 +1,7 @@
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class Hangman extends Score
+public class Hangman
 {
 	
 	private char[] secretWord;
