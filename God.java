@@ -30,7 +30,7 @@ public class God {
 
 		System.out.println("\nEnter 'exit' to forfeit in mid-game");
 
-		System.out.println("\nInput the moves in Standard Algebraic Notation (example: a2 to a3 for leftmost white pawn)”\n");
+		System.out.println("\nInput the moves in Standard Algebraic Notation (example: a2 to a3 for leftmost white pawn)\n");
 /*
 		try {
 			Thread.sleep(3000);
