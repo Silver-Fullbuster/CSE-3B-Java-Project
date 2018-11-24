@@ -1,5 +1,5 @@
 public class HangmanScore extends Score {
-	
+
 	private int noOfWrongGuesses;
 
 	public HangmanScore(String name, float time, int noOfWrongGuesses) {
