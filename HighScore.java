@@ -1,22 +1,28 @@
-import java.util.ArrayList;
+import java.util.Comparator;
+import java.sql.*;
 
-public class HighScore {
-	private ArrayList<Score> scoreList = new ArrayList<>();
+public class HighScore implements SQLAuth {
+	private Connection connection;
+	private Statement statement;
+	private int id;
 
-	public void addScore(Score score) {
-		scoreList.add(score);
-		scoreList.sort((a, b) -> {
-			float temp = a.getTime() - b.getTime();
-			return (int) temp;
-		});
+	public HighScore() {
+		try {
+			connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/rdbmsproject?autoReconnect=true&useSSL=false", USER, PASSWORD);
+			statement = connection.createStatement();
+			id = statement.executeQuery("SELECT COUNT(*) FROM rdbmsproject.highscores").findColumn("count(*)");
+		} catch (Exception exc) {
+			exc.printStackTrace();
+		}
 	}
 
+	public void addScore(Score score) {
+		score.updateDB(id, statement);
+		id++;
+	}
+
+	//TODO
 	public void displayScoreList() {
-		System.out.println("\tHIGH SCORES\n" +
-				"\n" +
-				"POS\tNAME\tTIME\tEXTRA\n");
-		int count = 0;
-		for (Score sc : scoreList)
-			System.out.println(++count + "\t" + sc.getScore());
+
 	}
 }
