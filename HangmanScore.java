@@ -1,3 +1,5 @@
+import java.sql.Statement;
+
 public class HangmanScore extends Score {
 
 	private int noOfWrongGuesses;
