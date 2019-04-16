@@ -11,4 +11,15 @@ public class HangmanScore extends Score {
 	public String getScore() {
 		return name + "\t" + time + "\tHangman: " + noOfWrongGuesses + " wrong guesses";
 	}
+
+	@Override
+	public void updateDB(int id, Statement statement){
+		super.updateDB(id, statement);
+		String sql = "INSERT INTO rdbmsproject.hangmanscore VALUES ("  + id + ", " + noOfWrongGuesses + ");";
+		try{
+			statement.executeUpdate(sql);
+		} catch (Exception e){
+			e.printStackTrace();
+		}
+	}
 }
