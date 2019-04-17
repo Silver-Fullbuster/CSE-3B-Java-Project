@@ -23,7 +23,8 @@ public class TicTacToe {
 				board[i][j] = ' ';
 	}
 
-	public static void launch(HighScore scores) {
+	public static void launch() {
+		TicTacToeHighScore scores = new TicTacToeHighScore();
 		do {
 			TicTacToe obj = new TicTacToe();
 			String tempInput;

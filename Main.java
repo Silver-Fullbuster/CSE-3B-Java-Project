@@ -22,13 +22,13 @@ public class Main {
 			}
 			switch (choice) {
 				case 1:
-					God.main(scores);
+					God.main();
 					break;
 				case 2:
-					Hangman.launch(scores);
+					Hangman.launch();
 					break;
 				case 3:
-					TicTacToe.launch(scores);
+					TicTacToe.launch();
 					break;
 				case 4:
 					scores.displayScoreList();

@@ -1,9 +1,8 @@
-import java.util.Comparator;
 import java.sql.*;
 
 public class HighScore implements SQLAuth {
 	private Connection connection;
-	private Statement statement;
+	protected Statement statement;
 	private int id;
 
 	public HighScore() {
@@ -23,6 +22,20 @@ public class HighScore implements SQLAuth {
 
 	//TODO
 	public void displayScoreList() {
+		System.out.println("\tHIGH SCORES\n" +
+				"\n" +
+				"NAME\tTIME\tTYPE");
+		try{
+			ResultSet result = statement.executeQuery("SELECT name, timetaken FROM rdbmsproject.highscores ORDER BY TimeTaken ASC;");
+			while(result.next()){
+				String name = result.getString("name");
+				String timeTaken = result.getString("timeTaken");
+				String type = result.getString("type");
+				System.out.println(name + "\t" + timeTaken + "\t" + type);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 	}
 }

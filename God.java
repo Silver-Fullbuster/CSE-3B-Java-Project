@@ -2,8 +2,8 @@ import java.util.Scanner;
 
 public class God {
 
-	public static void main(HighScore scores) {
-
+	public static void main() {
+		ChessHighScore scores = new ChessHighScore();
 		Code Geass = new Code();
 		Geass.command();
 

@@ -20,7 +20,8 @@ public class Hangman {
 		lettersGuessed = new char[30];
 	}
 
-	public static void launch(HighScore scores) {
+	public static void launch() {
+		HangmanHighScore scores = new HangmanHighScore();
 		Hangman obj = new Hangman();
 		obj.prepGame();
 		final long startTime = System.currentTimeMillis();
