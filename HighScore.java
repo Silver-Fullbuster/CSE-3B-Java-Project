@@ -19,8 +19,8 @@ public class HighScore implements SQLAuth {
 	}
 
 	public void addScore(Score score) {
-		score.updateDB(id, statement);
 		id++;
+		score.updateDB(id, statement);
 	}
 
 	//TODO
