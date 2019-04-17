@@ -9,7 +9,10 @@ public class HighScore implements SQLAuth {
 		try {
 			connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/rdbmsproject?autoReconnect=true&useSSL=false", USER, PASSWORD);
 			statement = connection.createStatement();
-			id = statement.executeQuery("SELECT COUNT(*) FROM rdbmsproject.highscores").findColumn("count(*)");
+			ResultSet rs = statement.executeQuery("SELECT COUNT(*) FROM rdbmsproject.highscores");
+			while(rs.next())
+				id = rs.getInt("COUNT(*)");
+			System.out.println(id);
 		} catch (Exception exc) {
 			exc.printStackTrace();
 		}

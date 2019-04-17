@@ -18,7 +18,7 @@ public class Main {
 				choice = scanner.nextInt();
 			} catch (Exception e) {
 				scanner.nextLine();
-				choice = 50;
+				choice = 0;
 			}
 			switch (choice) {
 				case 1:

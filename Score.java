@@ -22,7 +22,7 @@ public class Score {
 	}
 
 	public void updateDB(int id, Statement statement){
-		String sql = "INSERT INTO rdbmsproject.highscores VALUES ("  + id + ", '" + name + "', " + time + ");";
+		String sql = "INSERT INTO rdbmsproject.highscores VALUES ("  + id + ", '" + name + "', " + time + ", 'unknown');";
 		try{
 			statement.executeUpdate(sql);
 		} catch (Exception e){

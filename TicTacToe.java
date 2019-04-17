@@ -25,6 +25,36 @@ public class TicTacToe {
 
 	public static void launch() {
 		TicTacToeHighScore scores = new TicTacToeHighScore();
+		int choice;
+		do {
+			System.out.println("\n" +
+					"1. Play\n" +
+					"2. High Scores\n" +
+					"3. Exit\n" +
+					"\n" +
+					"Enter choice: ");
+			try {
+				choice = scanner.nextInt();
+			} catch (Exception e) {
+				scanner.nextLine();
+				choice = 0;
+			}
+			switch (choice) {
+				case 1:
+					play(scores);
+					return;
+				case 2:
+					scores.displayScoreList();
+					break;
+				case 3:
+					return;
+				default:
+					System.out.println("Unknown Choice! Please try again!");
+			}
+		} while (choice != 5);
+	}
+
+	private static void play(TicTacToeHighScore scores) {
 		do {
 			TicTacToe obj = new TicTacToe();
 			String tempInput;
