@@ -29,11 +29,11 @@ public class HighScore implements SQLAuth {
 				"\n" +
 				"NAME\tTIME\tTYPE");
 		try{
-			ResultSet result = statement.executeQuery("SELECT name, timetaken FROM rdbmsproject.highscores ORDER BY TimeTaken ASC;");
+			ResultSet result = statement.executeQuery("SELECT * FROM rdbmsproject.highscores ORDER BY TimeTaken ASC;");
 			while(result.next()){
 				String name = result.getString("name");
 				String timeTaken = result.getString("timeTaken");
-				String type = result.getString("type");
+				String type = result.getString("Type");
 				System.out.println(name + "\t" + timeTaken + "\t" + type);
 			}
 		} catch (Exception e) {

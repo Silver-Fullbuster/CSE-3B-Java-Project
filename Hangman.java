@@ -31,7 +31,6 @@ public class Hangman {
 			System.out.println("Enter name: ");
 			scores.addScore(new HangmanScore(sc.next(), endTime - startTime, obj.wrongGuess));
 		}
-
 	}
 
 	private void prepGame() {
