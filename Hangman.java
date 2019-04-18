@@ -22,6 +22,39 @@ public class Hangman {
 
 	public static void launch() {
 		HangmanHighScore scores = new HangmanHighScore();
+		int choice;
+		 do {
+			System.out.println("\t\tHANGMAN\n" +
+				"\n" +
+					"1. Play\n" +
+					"2. High Scores\n" +
+					"3. Exit\n" +
+					"\n" +
+					"Enter choice: ");
+			try {
+				choice = sc.nextInt();
+			} catch (Exception e) {
+				sc.nextLine();
+				choice = 0;
+			}
+			switch (choice) {
+				case 1:
+					play(scores);
+					return;
+				case 2:
+					scores.displayScoreList();
+					break;
+				case 3:
+					return;
+				default:
+					System.out.println("Unknown Choice! Please try again!");
+			}
+		} while (choice != 5);
+		
+	}
+	
+	
+	public static void play(HangmanHighScore scores){
 		Hangman obj = new Hangman();
 		obj.prepGame();
 		final long startTime = System.currentTimeMillis();
@@ -29,11 +62,12 @@ public class Hangman {
 		final long endTime = System.currentTimeMillis();
 		if (obj.guessed()) {
 			System.out.println("Enter name: ");
-			scores.addScore(new HangmanScore(sc.next(), endTime - startTime, obj.wrongGuess));
+			scores.addScore(new HangmanScore(sc.next(), (endTime - startTime)/(float)1000, obj.wrongGuess));
 		}
-
 	}
 
+
+ 
 	private void prepGame() {
 
 		for (int i = 0; i < secretWord.length; i++) {
@@ -47,6 +81,7 @@ public class Hangman {
 	}
 
 	private void startGame() {
+		
 		System.out.print(" _                                             \n" +
 				"| |                                            \n" +
 				"| |__   __ _ _ __   __ _ _ __ ___   __ _ _ __  \n" +
