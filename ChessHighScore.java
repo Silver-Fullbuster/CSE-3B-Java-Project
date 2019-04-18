@@ -4,6 +4,7 @@ public class ChessHighScore extends HighScore {
 
     public ChessHighScore() {
         super();
+        sql = "SELECT * FROM rdbmsproject.chessscores a JOIN rdbmsproject.highscores b ON a.id = b.id";
     }
 
     @Override
@@ -12,13 +13,14 @@ public class ChessHighScore extends HighScore {
                 "\n" +
                 "NAME\tTIME\tELO");
         try{
-            ResultSet result = statement.executeQuery("SELECT name, timetaken FROM rdbmsproject.chessscores a JOIN rdbmsproject.highscores b ON a.id = b.id ORDER BY TimeTaken ASC;");
+            ResultSet result = getResultSet();
             while(result.next()){
                 String name = result.getString("name");
                 String timeTaken = result.getString("timeTaken");
                 int _elorating = result.getInt("elo_rating");
                 System.out.println(name + "\t" + timeTaken + "\t" + _elorating);
             }
+            requestOptions();
         } catch (Exception e) {
             e.printStackTrace();
         }

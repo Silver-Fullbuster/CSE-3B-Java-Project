@@ -25,9 +25,11 @@ public class TicTacToe {
 
 	public static void launch() {
 		TicTacToeHighScore scores = new TicTacToeHighScore();
+
 		int choice;
 		do {
-			System.out.println("\n" +
+			System.out.println("\t\tTIC TAC TOE\n" +
+					"\n" +
 					"1. Play\n" +
 					"2. High Scores\n" +
 					"3. Exit\n" +

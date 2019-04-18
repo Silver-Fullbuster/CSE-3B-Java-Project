@@ -17,8 +17,10 @@ class ChessScore extends Score {
 	@Override
 	public void updateDB(int id, Statement statement){
 		super.updateDB(id, statement);
+		String sqlHS = "UPDATE rdbmsproject.highscores SET `Type` = 'Chess' WHERE ID = " + id + ";";
 		String sql = "INSERT INTO rdbmsproject.chessscores VALUES ("  + id + ", " + elo + ");";
 		try{
+			statement.executeUpdate(sqlHS);
 			statement.executeUpdate(sql);
 		} catch (Exception e){
 			e.printStackTrace();

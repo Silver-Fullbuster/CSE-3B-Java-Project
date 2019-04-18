@@ -4,9 +4,12 @@ public class Main {
 	public static void main(String args[]) {
 		HighScore scores = new HighScore();
 		Scanner scanner = new Scanner(System.in);
+
 		int choice;
 		do {
-			System.out.println("\n" +
+			System.out.print("\t\t\tGame Center\n" +
+					"(made by Charishma, Kartikeya and Mehul)\n" +
+					"\n" +
 					"1. Chess\n" +
 					"2. Hangman\n" +
 					"3. Tic Tac Toe\n" +

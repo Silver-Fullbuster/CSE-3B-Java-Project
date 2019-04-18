@@ -4,6 +4,7 @@ public class HangmanHighScore extends HighScore {
 
 	public HangmanHighScore() {
 		super();
+		sql = "SELECT * FROM rdbmsproject.hangmanscores a JOIN rdbmsproject.highscores b ON a.id = b.id";
 	}
 
 	@Override
@@ -12,13 +13,14 @@ public class HangmanHighScore extends HighScore {
 				"\n" +
 				"NAME\tTIME\tWRONG GUESSES");
 		try{
-			ResultSet result = statement.executeQuery("SELECT name, timetaken FROM rdbmsproject.hangmanscores a JOIN rdbmsproject.highscores b ON a.id = b.id ORDER BY TimeTaken ASC;");
+			ResultSet result = getResultSet();
 			while(result.next()){
 				String name = result.getString("name");
 				String timeTaken = result.getString("timeTaken");
 				int noOfWrongs = result.getInt("noOfWrongMoves");
 				System.out.println(name + "\t" + timeTaken + "\t" + noOfWrongs);
 			}
+			requestOptions();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
