@@ -65,7 +65,7 @@ public class God {
 
 			final long startTime = System.currentTimeMillis();  //Timer Starts
 
-			System.out.println("\nEnter 'exit' to forfeit in mid-game");
+			System.out.println("\nEnter 'resign' to forfeit in mid-game.");
 
 			System.out.println("\nInput the moves in Standard Algebraic Notation (example: a2 to a3 for leftmost white pawn)\n");
 
@@ -75,14 +75,14 @@ public class God {
 				chess.printBoard(chessboard);
 				move = sc.nextLine();
 
-				if (move.equals("exit")) {
+				if (move.equals("resign")) {
 					break;
 				}
 
 				chess.move(chessboard, move);
 
 			}
-			float elo = (1200f + 32f * (0.5f));
+			int elo = (int)(1200f + 32f * (0.5f));
 
 			final long endTime = System.currentTimeMillis();   //Timer Ends
 			System.out.println(p1 + " Wins!");
