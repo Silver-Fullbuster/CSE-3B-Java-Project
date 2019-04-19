@@ -17,10 +17,10 @@ public class HangmanScore extends Score {
 	@Override
 	public void updateDB(int id, Statement statement){
 		super.updateDB(id, statement);
-		String sqlHS = "UPDATE rdbmsproject.highscores SET `Type` = 'Hangman' WHERE ID = " + id + ";";
 		String sql = "INSERT INTO rdbmsproject.hangmanscores VALUES ("  + id + ", " + noOfWrongGuesses + ");";
+//		String sqlHS = "UPDATE rdbmsproject.highscores SET `Type` = 'Hangman' WHERE ID = " + id + ";";
 		try{
-			statement.executeUpdate(sqlHS);
+//			statement.executeUpdate(sqlHS);
 			statement.executeUpdate(sql);
 		} catch (Exception e){
 			e.printStackTrace();
