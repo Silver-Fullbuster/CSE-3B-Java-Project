@@ -4,7 +4,7 @@ import java.util.concurrent.ThreadLocalRandom;
 public class Hangman {
 
 	private char[] secretWord;
-	private int wrongGuess;
+	private int wrongGuess=0;
 	private char[] wordGuessed;
 	private char[] lettersGuessed;
 	private int guessCount = 0;

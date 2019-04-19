@@ -25,7 +25,7 @@ public class Main {
 			}
 			switch (choice) {
 				case 1:
-					God.main();
+					God.launch();
 					break;
 				case 2:
 					Hangman.launch();

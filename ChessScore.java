@@ -19,6 +19,7 @@ class ChessScore extends Score {
 		super.updateDB(id, statement);
 		String sqlHS = "UPDATE rdbmsproject.highscores SET `Type` = 'Chess' WHERE ID = " + id + ";";
 		String sql = "INSERT INTO rdbmsproject.chesscores VALUES ("  + id + ", " + this.elo + ");";
+		this.elo = 1200;
 		try{
 			statement.executeUpdate(sqlHS);
 			statement.executeUpdate(sql);
