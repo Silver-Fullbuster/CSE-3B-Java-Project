@@ -4,7 +4,7 @@ public class ChessHighScore extends HighScore {
 
     public ChessHighScore() {
         super();
-        sql = "SELECT * FROM rdbmsproject.chesscores a JOIN rdbmsproject.highscores b ON a.id = b.id";
+        sql = "SELECT * FROM rdbmsproject.chessscores a JOIN rdbmsproject.highscores b ON a.id = b.id";
     }
 
     @Override
