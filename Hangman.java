@@ -1,34 +1,41 @@
-import java.util.*;
+import java.io.IOException;
+import java.util.Scanner;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Hangman {
 
 	private char[] secretWord;
-	private int wrongGuess=0;
+	private int wrongGuessCount = 0;
 	private char[] wordGuessed;
 	private char[] lettersGuessed;
 	private int guessCount = 0;
 	private static Scanner sc;
 
+	private enum MULTIPLAYER {SERVER, CLIENT}
+
+	;
+
 	static {
 		sc = new Scanner(System.in);
 	}
 
-	private Hangman() {
-		secretWord = randomWord().toUpperCase().toCharArray();
-		wordGuessed = new char[secretWord.length];
+	private Hangman(String secretWord) {
+		this.secretWord = secretWord == null ? randomWord().toUpperCase().toCharArray() : secretWord.toUpperCase().toCharArray();
+		wordGuessed = new char[this.secretWord.length];
 		lettersGuessed = new char[30];
 	}
 
 	public static void launch() {
 		HangmanHighScore scores = new HangmanHighScore();
 		int choice;
-		 do {
+		do {
 			System.out.println("\t\tHANGMAN\n" +
-				"\n" +
+					"\n" +
 					"1. Play\n" +
 					"2. High Scores\n" +
 					"3. Exit\n" +
+					"4. Host (State word)\n" +
+					"5. Client (Guess word)\n" +
 					"\n" +
 					"Enter choice: ");
 			try {
@@ -46,28 +53,87 @@ public class Hangman {
 					break;
 				case 3:
 					return;
+				case 4:
+					playMultiplayer(scores, MULTIPLAYER.SERVER);
+					break;
+				case 5:
+					playMultiplayer(scores, MULTIPLAYER.CLIENT);
 				default:
 					System.out.println("Unknown Choice! Please try again!");
 			}
-		} while (choice != 5);
-		
+		} while (true);
+
 	}
-	
-	
-	public static void play(HangmanHighScore scores){
-		Hangman obj = new Hangman();
+
+	private static void playMultiplayer(HangmanHighScore scores, MULTIPLAYER mode) {
+		Hangman game;
+		String secret;
+		switch (mode) {
+			case SERVER:
+				Server server = Server.prep();
+				if (server == null)
+					return;
+				System.out.println("Please enter a secret word: ");
+				secret = sc.next();
+				sc.nextLine();
+				try {
+					server.send(secret);
+					String guessed = server.read();
+					if (guessed.charAt(0) == 'y'){
+						String name = server.read();
+						String time = server.read();
+						String badGuessCount = server.read();
+						//TODO: same db score addition for same machine multi ;-;
+//						scores.addScore(new HangmanScore(name, Integer.parseInt(time) / (float) 1000, Integer.parseInt(badGuessCount)));
+					}
+				} catch (IOException e) {
+					System.out.println("Network error: exiting game");
+					return;
+				}
+				break;
+			case CLIENT:
+				System.out.println("Enter IP Address: ");
+				String ip = sc.next();
+				sc.nextLine();
+				System.out.println("Enter port number: ");
+				int port = sc.nextInt();
+				Client client = Client.connect(ip, port);
+				if (client == null) return;
+				try{
+					secret = client.read();
+					game = new Hangman(secret);
+					final long startTime = System.currentTimeMillis();
+					game.startGame();
+					final long endTime = System.currentTimeMillis();
+					if (game.guessed()) {
+						System.out.println("Enter name: ");
+						String name = sc.next();
+						Long time = (endTime - startTime);
+						client.send(name);
+						client.send(time.toString());
+						client.send(((Integer) game.wrongGuessCount).toString());
+						scores.addScore(new HangmanScore(name, time / (float) 1000, game.wrongGuessCount));
+					}
+				} catch (IOException e){
+					System.out.println("Network error: exiting game");
+				}
+		}
+	}
+
+
+	public static void play(HangmanHighScore scores) {
+		Hangman obj = new Hangman(null);
 		obj.prepGame();
 		final long startTime = System.currentTimeMillis();
 		obj.startGame();
 		final long endTime = System.currentTimeMillis();
 		if (obj.guessed()) {
 			System.out.println("Enter name: ");
-			scores.addScore(new HangmanScore(sc.next(), (endTime - startTime)/(float)1000, obj.wrongGuess));
+			scores.addScore(new HangmanScore(sc.next(), (endTime - startTime) / (float) 1000, obj.wrongGuessCount));
 		}
 	}
 
 
- 
 	private void prepGame() {
 
 		for (int i = 0; i < secretWord.length; i++) {
@@ -81,7 +147,7 @@ public class Hangman {
 	}
 
 	private void startGame() {
-		
+
 		System.out.print(" _                                             \n" +
 				"| |                                            \n" +
 				"| |__   __ _ _ __   __ _ _ __ ___   __ _ _ __  \n" +
@@ -98,23 +164,23 @@ public class Hangman {
 		for (int i = 0; i < secretWord.length; i++)
 			System.out.print(wordGuessed[i] + " ");
 		System.out.println("\n");
-		wrongGuess = 0;
-		while (wrongGuess < 8) {
-			boolean flag;
+		wrongGuessCount = 0;
+		while (wrongGuessCount < 8) {
+			boolean duplicateGuess;
 			char letterGuessed;
 			do {
-				flag = false;
+				duplicateGuess = false;
 				System.out.print("Guess the letter: ");
 				letterGuessed = sc.next().toUpperCase().charAt(0);
 				for (int i = 0; i < guessCount; i++) {
 					if (lettersGuessed[i] == letterGuessed) {
 						System.out.println("This letter has already been guessed, please try with another letter");
-						flag = true;
+						duplicateGuess = true;
 						break;
 					}
 				}
 				lettersGuessed[guessCount++] = letterGuessed;
-			} while (flag);
+			} while (duplicateGuess);
 			if (isLetterGuessed(secretWord, letterGuessed)) {
 				for (int i = 0; i < secretWord.length; i++)
 					if (secretWord[i] == letterGuessed)
@@ -122,15 +188,15 @@ public class Hangman {
 				for (int i = 0; i < secretWord.length; i++)
 					System.out.print(wordGuessed[i] + " ");
 				System.out.println();
-				diagram(wrongGuess, secretWord, secretWord.length);
+				diagram(wrongGuessCount, secretWord, secretWord.length);
 				if (guessed()) {
 					System.out.println("hurray! you won");
 					break;
 				}
 			} else {
 				System.out.println("oops! this letter is not present in the word");
-				wrongGuess++;
-				diagram(wrongGuess, secretWord, secretWord.length);
+				wrongGuessCount++;
+				diagram(wrongGuessCount, secretWord, secretWord.length);
 			}
 		}
 	}
