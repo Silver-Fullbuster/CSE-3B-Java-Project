@@ -1,16 +1,10 @@
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-public class Client {
-	private Socket socket;
-	private DataInputStream dataInputStream;
-	private DataOutputStream dataOutputStream;
-
-
+public class Client extends Connection{
 	private Client(String ip, int port) throws IOException {
 		int connectionAttemptTries = 5; // number of times it'll try to connect
 		do {
@@ -41,11 +35,14 @@ public class Client {
 		System.out.println();
 		return obj;
 	}
-	public void send(String msg) throws IOException {
+
+	@Override
+	public void write(String msg) throws IOException {
 		dataOutputStream.writeUTF(msg);
 		dataOutputStream.flush();
 	}
 
+	@Override
 	public String read() throws IOException {
 		return dataInputStream.readUTF();
 	}

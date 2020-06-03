@@ -3,15 +3,11 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
-import java.net.Socket;
 import java.net.SocketTimeoutException;
 
-public class Server {
+public class Server extends Connection{
 	private ServerSocket serverSocket = null;
-	private Socket socket;
 	private int port;
-	private DataInputStream dataInputStream;
-	private DataOutputStream dataOutputStream;
 
 	private Server() throws IOException {
 		do{
@@ -52,7 +48,7 @@ public class Server {
 		return obj;
 	}
 
-	public void send(String msg) throws IOException{
+	public void write(String msg) throws IOException{
 		dataOutputStream.writeUTF(msg);
 		dataOutputStream.flush();
 	}

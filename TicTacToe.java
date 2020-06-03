@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.util.Scanner;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -11,6 +12,8 @@ public class TicTacToe {
 	private char winnerChar = ' ';
 	private static Scanner scanner;
 	private int totalTurns;
+
+	private enum MULTIPLAYER {SERVER, CLIENT}
 
 	static {
 		scanner = new Scanner(System.in);
@@ -33,6 +36,8 @@ public class TicTacToe {
 					"1. Play\n" +
 					"2. High Scores\n" +
 					"3. Exit\n" +
+					"4. Host (Plays first)\n" +
+					"5. Join (Plays second)\n" +
 					"\n" +
 					"Enter choice: ");
 			try {
@@ -50,42 +55,104 @@ public class TicTacToe {
 					break;
 				case 3:
 					return;
+				case 4:
+					playMultiplayer(scores, MULTIPLAYER.SERVER);
+					break;
+				case 5:
+					playMultiplayer(scores, MULTIPLAYER.CLIENT);
+					break;
 				default:
 					System.out.println("Unknown Choice! Please try again!");
 			}
-		} while (choice != 5);
+		} while (true);
+	}
+
+	private static void playMultiplayer(TicTacToeHighScore scores, MULTIPLAYER mode) {
+		TicTacToe game;
+		boolean won;
+		switch (mode) {
+			case SERVER:
+				Server server = Server.prep();
+				if (server == null) return;
+				game = new TicTacToe();
+				game.OXChoice = 'O';
+				game.firstTurn = true;
+				try {
+					final long startTime = System.currentTimeMillis();
+					won = game.startGameMultiplayer(server);
+					final long stopTime = System.currentTimeMillis();
+					final long elapsedTime = (stopTime - startTime);
+					System.out.println("\nGame finished in " + elapsedTime / (float) 1000 + " seconds\n");
+					server.write(String.valueOf(elapsedTime));
+					server.write(String.valueOf(game.totalTurns));
+					String name;
+					if (won) {
+						System.out.println("Enter your name: ");
+						name = scanner.next();
+					} else name = server.read();
+					scores.addScore(new TicTacToeScore(name, elapsedTime / (float) 1000, game.totalTurns));
+				} catch (IOException e) {
+					System.out.println("Network error: exiting game");
+				}
+				return;
+			case CLIENT:
+				System.out.println("Enter IP Address: ");
+				String ip = scanner.next();
+				scanner.nextLine();
+				System.out.println("Enter port number: ");
+				int port = scanner.nextInt();
+				Client client = Client.connect(ip, port);
+				if (client == null) return;
+				game = new TicTacToe();
+				game.OXChoice = 'O';
+				game.firstTurn = false;
+				try {
+					won = game.startGameMultiplayer(client);
+					final long elapsedTime = Long.parseLong(client.read());
+					System.out.println("\nGame finished in " + elapsedTime / (float) 1000 + " seconds\n");
+					game.totalTurns = Integer.parseInt(client.read());
+					String name;
+					if (won) {
+						System.out.println("Enter your name: ");
+						name = scanner.next();
+						client.write(name);
+					}
+				} catch (IOException e) {
+					System.out.println("Network error: exiting game");
+				}
+		}
 	}
 
 	private static void play(TicTacToeHighScore scores) {
 		do {
-			TicTacToe obj = new TicTacToe();
+			TicTacToe game = new TicTacToe();
 			String tempInput;
 			System.out.println("What do you want to play as, O or X?\n" +
 					"Enter choice: ");
 			for (boolean invalidInput = true; invalidInput; ) {
-				obj.OXChoice = Character.toUpperCase(scanner.next().charAt(0));
-				if (obj.OXChoice == 'O' || obj.OXChoice == 'X')
+				game.OXChoice = Character.toUpperCase(scanner.next().charAt(0));
+				if (game.OXChoice == 'O' || game.OXChoice == 'X')
 					invalidInput = false;
 				else
 					System.out.println("Only O or X allowed for input!!\nEnter choice: ");
 			}
 			System.out.println("Do you want to play first?");
 			tempInput = scanner.next().toUpperCase();
-			obj.firstTurn = tempInput.equals("YES") || tempInput.equals("Y");
+			game.firstTurn = tempInput.equals("YES") || tempInput.equals("Y");
 			final long startTime = System.currentTimeMillis();
-			boolean won = obj.startGame();
+			boolean won = game.startGameWithComputer();
 			final long stopTime = System.currentTimeMillis();
 			final float elapsedTime = (float) (stopTime - startTime) / 1000;
 			System.out.println("\nYou finished in " + elapsedTime + " seconds\n");
 			if (won) {
 				System.out.println("Enter your name: ");
-				scores.addScore(new TicTacToeScore(scanner.next(), elapsedTime, obj.totalTurns));
+				scores.addScore(new TicTacToeScore(scanner.next(), elapsedTime, game.totalTurns));
 			}
 			System.out.println("\nEnter 'y' to play again, any other key will exit!");
 		} while (scanner.next().equals("y"));
 	}
 
-	private boolean startGame() {
+	private boolean startGameWithComputer() {
 		do {
 			if (firstTurn) getPlayerInput();
 			else getComputerInput();
@@ -107,6 +174,51 @@ public class TicTacToe {
 		}
 		return false;
 	}
+
+	private boolean startGameMultiplayer(Connection connection) throws IOException {
+		do {
+			if (firstTurn) connection.write(String.valueOf(getPlayerInput()));
+			else getRemotePlayerInput(connection);
+
+			if (gameEnded()) break;
+
+			if (firstTurn) getRemotePlayerInput(connection);
+			else connection.write(String.valueOf(getPlayerInput()));
+		} while (!gameEnded());
+		System.out.println("Game Ended");
+		showBoard();
+		if (winnerChar == ' ')
+			System.out.println("It's a tie!");
+		else if (winnerChar == OXChoice) {
+			System.out.println("You won");
+			return true;
+		} else {
+			System.out.println("Remote player won");
+		}
+		return false;
+	}
+
+	private int getPlayerInput() {
+		++totalTurns;
+		showBoard();
+		boolean inputIssue;
+		int index;
+		do {
+			inputIssue = false;
+			System.out.println("Enter position: ");
+			index = scanner.nextInt() - 1;
+			if (index < 0 || index > 8) {
+				System.out.println("Unknown Choice");
+				inputIssue = true;
+			} else if (board[(index) / 3][index % 3] != ' ') {
+				System.out.println("Already filled!!");
+				inputIssue = true;
+			}
+		} while (inputIssue);
+		board[index / 3][index % 3] = OXChoice;
+		return index;
+	}
+
 
 	private boolean gameEnded() {
 		winnerChar = ' ';   //No winner decided (TIE condition)
@@ -134,24 +246,11 @@ public class TicTacToe {
 		return boardFilled();
 	}
 
-	private void getPlayerInput() {
-		++totalTurns;
-		showBoard();
-		boolean inputIssue;
+	private void getRemotePlayerInput(Connection connection) throws IOException {
 		int index;
-		do {
-			inputIssue = false;
-			System.out.println("Enter position: ");
-			index = scanner.nextInt() - 1;
-			if (index < 0 || index > 8) {
-				System.out.println("Unknown Choice");
-				inputIssue = true;
-			} else if (board[(index) / 3][index % 3] != ' ') {
-				System.out.println("Already filled!!");
-				inputIssue = true;
-			}
-		} while (inputIssue);
-		board[index / 3][index % 3] = OXChoice;
+		System.out.println("Remote player playing move..");
+		index = Integer.parseInt(connection.read());
+		board[index / 3][index % 3] = 'X';
 	}
 
 

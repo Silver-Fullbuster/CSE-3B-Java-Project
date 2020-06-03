@@ -13,8 +13,6 @@ public class Hangman {
 
 	private enum MULTIPLAYER {SERVER, CLIENT}
 
-	;
-
 	static {
 		sc = new Scanner(System.in);
 	}
@@ -58,6 +56,7 @@ public class Hangman {
 					break;
 				case 5:
 					playMultiplayer(scores, MULTIPLAYER.CLIENT);
+					break;
 				default:
 					System.out.println("Unknown Choice! Please try again!");
 			}
@@ -77,9 +76,9 @@ public class Hangman {
 				secret = sc.next();
 				sc.nextLine();
 				try {
-					server.send(secret);
+					server.write(secret);
 					String guessed = server.read();
-					if (guessed.charAt(0) == 'y'){
+					if (guessed.charAt(0) == 'y') {
 						String name = server.read();
 						String time = server.read();
 						String badGuessCount = server.read();
@@ -99,7 +98,7 @@ public class Hangman {
 				int port = sc.nextInt();
 				Client client = Client.connect(ip, port);
 				if (client == null) return;
-				try{
+				try {
 					secret = client.read();
 					game = new Hangman(secret);
 					final long startTime = System.currentTimeMillis();
@@ -109,12 +108,12 @@ public class Hangman {
 						System.out.println("Enter name: ");
 						String name = sc.next();
 						Long time = (endTime - startTime);
-						client.send(name);
-						client.send(time.toString());
-						client.send(((Integer) game.wrongGuessCount).toString());
+						client.write(name);
+						client.write(String.valueOf(time));
+						client.write(String.valueOf(game.wrongGuessCount));
 						scores.addScore(new HangmanScore(name, time / (float) 1000, game.wrongGuessCount));
 					}
-				} catch (IOException e){
+				} catch (IOException e) {
 					System.out.println("Network error: exiting game");
 				}
 		}
@@ -122,14 +121,14 @@ public class Hangman {
 
 
 	public static void play(HangmanHighScore scores) {
-		Hangman obj = new Hangman(null);
-		obj.prepGame();
+		Hangman game = new Hangman(null);
+		game.prepGame();
 		final long startTime = System.currentTimeMillis();
-		obj.startGame();
+		game.startGame();
 		final long endTime = System.currentTimeMillis();
-		if (obj.guessed()) {
+		if (game.guessed()) {
 			System.out.println("Enter name: ");
-			scores.addScore(new HangmanScore(sc.next(), (endTime - startTime) / (float) 1000, obj.wrongGuessCount));
+			scores.addScore(new HangmanScore(sc.next(), (endTime - startTime) / (float) 1000, game.wrongGuessCount));
 		}
 	}
 

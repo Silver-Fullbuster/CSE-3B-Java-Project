@@ -84,7 +84,7 @@ public class God {
 					chess.move(chessboard, moveServerToClient);
 					// SEND WHITE'S MOVE TO BLACK
 					try{
-						server.send(moveServerToClient);
+						server.write(moveServerToClient);
 					} catch (IOException e) {
 						System.out.println("Network error: exiting the game");
 						return;
@@ -161,7 +161,7 @@ public class God {
 					chess.move(chessboard, moveClientToServer);
 					// SEND BLACK'S MOVE TO THE SERVER
 					try{
-						server.send(moveClientToServer);
+						server.write(moveClientToServer);
 					} catch (IOException e) {
 						System.out.println("Network error: exiting the game");
 						return;
