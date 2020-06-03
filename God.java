@@ -1,12 +1,11 @@
 import java.util.Scanner;
-
+import java.io.IOException;
 
 public class God {
 
 	public static void launch() {
 		ChessHighScore scores = new ChessHighScore();
 		Scanner sc = new Scanner(System.in);
-
 		int choice;
 		do {
 			System.out.println("\t\tCHESS\n" +
@@ -16,6 +15,7 @@ public class God {
 					"3. Exit\n" +
 					"4. Host (white)\n" +
 					"5. Client (black)\n" + 
+					"6. Exit" +
 					"\n" +
 					"Enter choice: ");
 			try {
@@ -33,20 +33,28 @@ public class God {
 					break;
 				case 3:
 					return;
-				case 4: playMultiplayer(scores, MULTIPLAYER.SERVER);
+				case 4: playMultiplayer(scores, Chess.MULTIPLAYER.SERVER);
 					break;
-				case 5: playMultiplayer(scores, MULTIPLAYER.CLIENT);
+				case 5: playMultiplayer(scores, Chess.MULTIPLAYER.CLIENT);
 				default:
 					System.out.println("Unknown Choice! Please try again!");
 			}
-		} while (choice != 5);
+		} while (choice != 6);
 
 	}
 
-	public static void playMultiplayer(ChessHighScore scores, MULTIPLAYER mode){
+	public static void playMultiplayer(ChessHighScore scores, Chess.MULTIPLAYER mode){
 		Chess game;
 		Player player = new Player();
-		String p1, p2;
+		String p1=null, p2=null;
+
+		Scanner sc = new Scanner(System.in);
+
+		Code Geass = new Code();
+		Chess chess = new Chess();
+		Chess.Pieces[][] chessboard = new Chess.Pieces[8][8]; // creates chessboard
+
+
 		switch(mode){
 			case SERVER:
 				Server server = Server.prep();
@@ -54,14 +62,9 @@ public class God {
 					return;
 				
 				// INITIAL STUPID MESSAGE
-				Code Geass = new Code();
 				Geass.command();
-				Scanner sc = new Scanner(System.in);
-
-				Chess.Pieces[][] chessboard = new Chess.Pieces[8][8]; // creates chessboard
 
 				// FILL THE CHESSBOARD
-				Chess chess = new Chess();
 				chess.fillBoard(chessboard);
 
 				// SERVER = WHITE; ENTER PLAYER DETAILS
@@ -91,16 +94,16 @@ public class God {
 					}
 					// RECEIVE BLACK'S MOVE
 					try{
-						String moveClientToServer = client.read();
+						String moveClientToServer = server.read();
+						if (moveClientToServer.equals("exit")) {
+							break;
+						}
+						// PLAY BLACK'S MOVE
+						chess.move(chessboard, moveClientToServer);
 					} catch (IOException e) {
 						System.out.println("Network error: exiting the game");
 						return;
 					}
-					if (moveClientToServer.equals("exit")) {
-						break;
-					}
-					// PLAY BLACK'S MOVE
-					chess.move(chessboard, moveClientToServer);
 				}
 				System.out.println(p2+" wins!");
 				// UPDATE SCORES
@@ -118,14 +121,9 @@ public class God {
 				if (client == null) return;
 
 				// INITIAL STUPID MESSAGE
-				Code Geass = new Code();
 				Geass.command();
-				Scanner sc = new Scanner(System.in);
-
-				Chess.Pieces[][] chessboard = new Chess.Pieces[8][8]; // creates chessboard
 
 				// FILL THE CHESSBOARD
-				Chess chess = new Chess();
 				chess.fillBoard(chessboard);
 
 				// CLIENT = BLACK; ENTER PLAYER DETAILS
@@ -143,16 +141,15 @@ public class God {
 					// RECEIVE MOVE FROM WHITE
 					try{
 						String moveServerToClient = client.read();
+						if (moveServerToClient.equals("exit")) {
+							break;
+						}
+						// PLAY WHITE'S MOVE
+						chess.move(chessboard, moveServerToClient);
 					} catch (IOException e) {
 						System.out.println("Network error: exiting the game");
 						return;
-					}
-					if (moveServerToClient.equals("exit")) {
-						break;
-					}
-					// PLAY WHITE'S MOVE
-					chess.move(chessboard, moveServerToClient);
-
+					}				
 					// PLAY BLACK'S MOVE
 					String moveClientToServer = sc.nextLine();
 					if (moveClientToServer.equals("exit")) {
@@ -161,7 +158,7 @@ public class God {
 					chess.move(chessboard, moveClientToServer);
 					// SEND BLACK'S MOVE TO THE SERVER
 					try{
-						server.write(moveClientToServer);
+						client.write(moveClientToServer);
 					} catch (IOException e) {
 						System.out.println("Network error: exiting the game");
 						return;
@@ -227,6 +224,7 @@ public class God {
 			scores.addScore(new ChessScore(p1, (float) (endTime - startTime) / 1000, elo)); //pass updated elo
 			System.out.println("Enter 'y' to play again; any other key will exit");
 		} while (sc.next().equals("y"));
+	
 
 	}
 
