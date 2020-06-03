@@ -14,6 +14,8 @@ public class God {
 					"1. Play\n" +
 					"2. High Scores\n" +
 					"3. Exit\n" +
+					"4. Host (white)\n" +
+					"5. Client (black)\n" + 
 					"\n" +
 					"Enter choice: ");
 			try {
@@ -31,11 +33,144 @@ public class God {
 					break;
 				case 3:
 					return;
+				case 4: playMultiplayer(scores, MULTIPLAYER.SERVER);
+					break;
+				case 5: playMultiplayer(scores, MULTIPLAYER.CLIENT);
 				default:
 					System.out.println("Unknown Choice! Please try again!");
 			}
 		} while (choice != 5);
 
+	}
+
+	public static void playMultiplayer(ChessHighScore scores, MULTIPLAYER mode){
+		Chess game;
+		Player player = new Player();
+		String p1, p2;
+		switch(mode){
+			case SERVER:
+				Server server = Server.prep();
+				if (server == null)
+					return;
+				
+				// INITIAL STUPID MESSAGE
+				Code Geass = new Code();
+				Geass.command();
+				Scanner sc = new Scanner(System.in);
+
+				Chess.Pieces[][] chessboard = new Chess.Pieces[8][8]; // creates chessboard
+
+				// FILL THE CHESSBOARD
+				Chess chess = new Chess();
+				chess.fillBoard(chessboard);
+
+				// SERVER = WHITE; ENTER PLAYER DETAILS
+				System.out.println("\nEnter player 1 name (white): ");
+				p1 = sc.next();
+				player.SetWhite(p1);
+				
+				// INSTRUCTIONS
+				System.out.println("\nEnter 'exit' to forfeit in mid-game");
+				System.out.println("\nInput the moves in Standard Algebraic Notation (example: a2 to a3 for leftmost white pawn)\n");
+				sc.nextLine();
+
+				while (true) {
+					chess.printBoard(chessboard);
+					// PLAY WHITE'S MOVE
+					String moveServerToClient = sc.nextLine();
+					if (moveServerToClient.equals("exit")) {
+						break;
+					}
+					chess.move(chessboard, moveServerToClient);
+					// SEND WHITE'S MOVE TO BLACK
+					try{
+						server.send(moveServerToClient);
+					} catch (IOException e) {
+						System.out.println("Network error: exiting the game");
+						return;
+					}
+					// RECEIVE BLACK'S MOVE
+					try{
+						String moveClientToServer = client.read();
+					} catch (IOException e) {
+						System.out.println("Network error: exiting the game");
+						return;
+					}
+					if (moveClientToServer.equals("exit")) {
+						break;
+					}
+					// PLAY BLACK'S MOVE
+					chess.move(chessboard, moveClientToServer);
+				}
+				System.out.println(p2+" wins!");
+				// UPDATE SCORES
+				scores.addScore(new ChessScore(p2, (float)222, 1234));
+				break;
+
+			case CLIENT:
+				// CONNECT TO SERVER
+				System.out.println("Enter IP Address: ");
+				String ip = sc.next();
+				sc.nextLine();
+				System.out.println("Enter port number: ");
+				int port = sc.nextInt();
+				Client client = Client.connect(ip, port);
+				if (client == null) return;
+
+				// INITIAL STUPID MESSAGE
+				Code Geass = new Code();
+				Geass.command();
+				Scanner sc = new Scanner(System.in);
+
+				Chess.Pieces[][] chessboard = new Chess.Pieces[8][8]; // creates chessboard
+
+				// FILL THE CHESSBOARD
+				Chess chess = new Chess();
+				chess.fillBoard(chessboard);
+
+				// CLIENT = BLACK; ENTER PLAYER DETAILS
+				System.out.println("Enter player 2 name (black): ");
+				p2 = sc.next();
+				player.SetBlack(p2);
+
+				// INSTRUCTIONS
+				System.out.println("\nEnter 'exit' to forfeit in mid-game");
+				System.out.println("\nInput the moves in Standard Algebraic Notation (example: a2 to a3 for leftmost white pawn)\n");
+				sc.nextLine();
+
+				while (true) {
+					chess.printBoard(chessboard);
+					// RECEIVE MOVE FROM WHITE
+					try{
+						String moveServerToClient = client.read();
+					} catch (IOException e) {
+						System.out.println("Network error: exiting the game");
+						return;
+					}
+					if (moveServerToClient.equals("exit")) {
+						break;
+					}
+					// PLAY WHITE'S MOVE
+					chess.move(chessboard, moveServerToClient);
+
+					// PLAY BLACK'S MOVE
+					String moveClientToServer = sc.nextLine();
+					if (moveClientToServer.equals("exit")) {
+						break;
+					}
+					chess.move(chessboard, moveClientToServer);
+					// SEND BLACK'S MOVE TO THE SERVER
+					try{
+						server.send(moveClientToServer);
+					} catch (IOException e) {
+						System.out.println("Network error: exiting the game");
+						return;
+					}		
+				}
+				System.out.println(p1+" wins!");
+				scores.addScore(new ChessScore(p1, (float) 222, 1234));
+				break;
+		}
 	}
 
 	public static void play(ChessHighScore scores){

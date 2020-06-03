@@ -1,3 +1,6 @@
+import java.io.IOException;
+import java.util.Scanner;
+
 public class Chess {
 
     public enum Pieces {
@@ -15,6 +18,9 @@ public class Chess {
         BLACK_BISHOP,
         BLACK_KNIGHT,
     }
+
+    private enum MULTIPLAYER {SERVER, CLIENT};
+
 
     public void printBoard(Pieces[][] chessboard) {
         char letter = 'a';
