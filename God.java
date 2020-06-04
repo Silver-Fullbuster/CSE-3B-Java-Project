@@ -99,16 +99,15 @@ public class God {
 						System.out.println("Network error: exiting the game");
 						return;
 					}
-					while(sc.nextLine()!=null)
-						System.out.println("Don't move out of turn!");
 					// RECEIVE BLACK'S MOVE
+					System.out.println("Waiting for black to move...");
 					try{
 						String moveClientToServer = server.read();
 						if (moveClientToServer.equals("exit")) {
 							break;
 						}
 						// PLAY BLACK'S MOVE
-						chess.move(chessboard, moveClientToServer);
+						validWHITE=chess.move(chessboard, moveClientToServer,1);
 						chess.printBoard(chessboard);
 					} catch (IOException e) {
 						System.out.println("Network error: exiting the game");
@@ -147,11 +146,9 @@ public class God {
 				System.out.println("\nInput the moves in Standard Algebraic Notation (example: a2 to a3 for leftmost white pawn)\n");
 				sc.nextLine();
 				
-				chess.printBoard(chessboard);
 				while (true) {
 					String moveClientToServer = null;
-					while(sc.nextLine()!=null)
-						System.out.println("Don't move out of turn!");
+					System.out.println("\n Waiting for white to move...");
 					// RECEIVE MOVE FROM WHITE
 					try{
 						String moveServerToClient = client.read();
