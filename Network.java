@@ -3,7 +3,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 
-public abstract class Connection {
+public abstract class Network {
 
 	protected Socket socket;
 	protected DataInputStream dataInputStream;

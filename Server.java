@@ -5,7 +5,7 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.SocketTimeoutException;
 
-public class Server extends Connection{
+public class Server extends Network {
 	private ServerSocket serverSocket = null;
 	private int port;
 

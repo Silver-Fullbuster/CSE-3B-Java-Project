@@ -175,15 +175,15 @@ public class TicTacToe {
 		return false;
 	}
 
-	private boolean startGameMultiplayer(Connection connection) throws IOException {
+	private boolean startGameMultiplayer(Network network) throws IOException {
 		do {
-			if (firstTurn) connection.write(String.valueOf(getPlayerInput()));
-			else getRemotePlayerInput(connection);
+			if (firstTurn) network.write(String.valueOf(getPlayerInput()));
+			else getRemotePlayerInput(network);
 
 			if (gameEnded()) break;
 
-			if (firstTurn) getRemotePlayerInput(connection);
-			else connection.write(String.valueOf(getPlayerInput()));
+			if (firstTurn) getRemotePlayerInput(network);
+			else network.write(String.valueOf(getPlayerInput()));
 		} while (!gameEnded());
 		System.out.println("Game Ended");
 		showBoard();
@@ -246,10 +246,10 @@ public class TicTacToe {
 		return boardFilled();
 	}
 
-	private void getRemotePlayerInput(Connection connection) throws IOException {
+	private void getRemotePlayerInput(Network network) throws IOException {
 		int index;
 		System.out.println("Remote player playing move..");
-		index = Integer.parseInt(connection.read());
+		index = Integer.parseInt(network.read());
 		board[index / 3][index % 3] = 'X';
 	}
 
