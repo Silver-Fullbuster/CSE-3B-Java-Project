@@ -5,7 +5,7 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.SocketTimeoutException;
 
-public class Server extends Connection{
+public class Server extends Network {
 	private ServerSocket serverSocket = null;
 	private int port;
 
@@ -48,12 +48,24 @@ public class Server extends Connection{
 		return obj;
 	}
 
+	@Override
 	public void write(String msg) throws IOException{
 		dataOutputStream.writeUTF(msg);
 		dataOutputStream.flush();
 	}
 
+	@Override
 	public String read() throws IOException {
 		return dataInputStream.readUTF();
+	}
+
+	@Override
+	public void close() {
+		super.close();
+		try {
+			serverSocket.close();
+		} catch (IOException e){
+			e.printStackTrace();
+		}
 	}
 }

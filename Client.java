@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-public class Client extends Connection{
+public class Client extends Network {
 	private Client(String ip, int port) throws IOException {
 		int connectionAttemptTries = 5; // number of times it'll try to connect
 		do {

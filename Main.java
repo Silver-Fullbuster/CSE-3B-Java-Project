@@ -8,7 +8,7 @@ public class Main {
 		int choice;
 		do {
 			System.out.print("\t\t\tGame Center\n" +
-					"(made by Charishma, Kartikeya and Mehul)\n" +
+					"(made by Kartikeya and Mehul)\n" +
 					"\n" +
 					"1. Chess\n" +
 					"2. Hangman\n" +
@@ -36,10 +36,10 @@ public class Main {
 				case 4:
 					scores.displayScoreList();
 				case 5:
-					break;
+					return;
 				default:
 					System.out.println("Unknown Choice! Please try again!");
 			}
-		} while (choice != 5);
+		} while (true);
 	}
 }

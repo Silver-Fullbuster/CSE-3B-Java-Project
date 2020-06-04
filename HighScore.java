@@ -1,6 +1,5 @@
 import java.sql.*;
 import java.util.Scanner;
-import java.sql.Connection;
 
 public class HighScore implements SQLAuth {
 	private Statement statement;

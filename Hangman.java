@@ -45,7 +45,7 @@ public class Hangman {
 			switch (choice) {
 				case 1:
 					play(scores);
-					return;
+					break;
 				case 2:
 					scores.displayScoreList();
 					break;
@@ -77,17 +77,25 @@ public class Hangman {
 				sc.nextLine();
 				try {
 					server.write(secret);
+					System.out.println("Waiting for the remote player to guess...");
 					String guessed = server.read();
 					if (guessed.charAt(0) == 'y') {
 						String name = server.read();
-						String time = server.read();
-						String badGuessCount = server.read();
+						int elapsedTime = Integer.parseInt(server.read());
+						System.out.println("\nGame finished in " + elapsedTime / (float) 1000 + " seconds\n");
+						int badGuessCount = Integer.parseInt(server.read());
+						System.out.println("Remote player won, adding score:\n" +
+								"Name: " + name + ", bad guesses: " + badGuessCount);
 						//TODO: same db score addition for same machine multi ;-;
-//						scores.addScore(new HangmanScore(name, Integer.parseInt(time) / (float) 1000, Integer.parseInt(badGuessCount)));
+						scores.addScore(new HangmanScore(name, elapsedTime / (float) 1000, badGuessCount));
+					} else {
+						System.out.println("Remote player lost, thanks for playing!\n");
 					}
 				} catch (IOException e) {
 					System.out.println("Network error: exiting game");
 					return;
+				} finally {
+					server.close();
 				}
 				break;
 			case CLIENT:
@@ -99,22 +107,30 @@ public class Hangman {
 				Client client = Client.connect(ip, port);
 				if (client == null) return;
 				try {
+					System.out.println("Waiting for secret word...\n\n");
 					secret = client.read();
 					game = new Hangman(secret);
+					game.prepGame();
 					final long startTime = System.currentTimeMillis();
 					game.startGame();
 					final long endTime = System.currentTimeMillis();
 					if (game.guessed()) {
+						client.write("y");
 						System.out.println("Enter name: ");
 						String name = sc.next();
-						Long time = (endTime - startTime);
+						long elapsedTime = (endTime - startTime);
+						System.out.println("\nGame finished in " + elapsedTime / (float) 1000 + " seconds\n");
 						client.write(name);
-						client.write(String.valueOf(time));
+						client.write(String.valueOf(elapsedTime));
 						client.write(String.valueOf(game.wrongGuessCount));
-						scores.addScore(new HangmanScore(name, time / (float) 1000, game.wrongGuessCount));
+//						scores.addScore(new HangmanScore(name, time / (float) 1000, game.wrongGuessCount));
+					} else {
+						client.write("n");
 					}
 				} catch (IOException e) {
 					System.out.println("Network error: exiting game");
+				} finally {
+					client.close();
 				}
 		}
 	}
