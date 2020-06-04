@@ -93,6 +93,8 @@ public class TicTacToe {
 					scores.addScore(new TicTacToeScore(name, elapsedTime / (float) 1000, game.totalTurns));
 				} catch (IOException e) {
 					System.out.println("Network error: exiting game");
+				} finally {
+					server.close();
 				}
 				return;
 			case CLIENT:
@@ -119,6 +121,8 @@ public class TicTacToe {
 					}
 				} catch (IOException e) {
 					System.out.println("Network error: exiting game");
+				} finally {
+					client.close();
 				}
 		}
 	}

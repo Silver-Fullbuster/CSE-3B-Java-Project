@@ -13,4 +13,13 @@ public abstract class Network {
 
 	protected abstract void write(String msg) throws IOException;
 
+	protected void close(){
+		try {
+			dataInputStream.close();
+			dataOutputStream.close();
+			socket.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 }

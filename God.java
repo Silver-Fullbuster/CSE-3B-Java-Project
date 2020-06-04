@@ -12,10 +12,9 @@ public class God {
 					"\n" +
 					"1. Play\n" +
 					"2. High Scores\n" +
-					"3. Exit\n" +
-					"4. Host (white)\n" +
-					"5. Client (black)\n" + 
-					"6. Exit" +
+					"3. Host (white)\n" +
+					"4. Client (black)\n" +
+					"5. Exit" +
 					"\n" +
 					"Enter choice: ");
 			try {
@@ -32,21 +31,24 @@ public class God {
 					scores.displayScoreList();
 					break;
 				case 3:
-					return;
-				case 4: playMultiplayer(scores, Chess.MULTIPLAYER.SERVER);
+					playMultiplayer(scores, Chess.MULTIPLAYER.SERVER);
 					break;
-				case 5: playMultiplayer(scores, Chess.MULTIPLAYER.CLIENT);
+				case 4:
+					playMultiplayer(scores, Chess.MULTIPLAYER.CLIENT);
+					break;
+				case 5:
+					return;
 				default:
 					System.out.println("Unknown Choice! Please try again!");
 			}
-		} while (choice != 6);
+		} while (true);
 
 	}
 
-	public static void playMultiplayer(ChessHighScore scores, Chess.MULTIPLAYER mode){
+	public static void playMultiplayer(ChessHighScore scores, Chess.MULTIPLAYER mode) {
 		Chess game;
 		Player player = new Player();
-		String p1=null, p2=null;
+		String p1 = null, p2 = null;
 
 		Scanner sc = new Scanner(System.in);
 
@@ -55,12 +57,12 @@ public class God {
 		Chess.Pieces[][] chessboard = new Chess.Pieces[8][8]; // creates chessboard
 
 
-		switch(mode){
+		switch (mode) {
 			case SERVER:
 				Server server = Server.prep();
 				if (server == null)
 					return;
-				
+
 				// INITIAL STUPID MESSAGE
 				Geass.command();
 
@@ -71,7 +73,7 @@ public class God {
 				System.out.println("\nEnter player 1 name (white): ");
 				p1 = sc.next();
 				player.SetWhite(p1);
-				
+
 				// INSTRUCTIONS
 				System.out.println("\nEnter 'exit' to forfeit in mid-game");
 				System.out.println("\nInput the moves in Standard Algebraic Notation (example: a2 to a3 for leftmost white pawn)\n");
@@ -86,14 +88,14 @@ public class God {
 					}
 					chess.move(chessboard, moveServerToClient);
 					// SEND WHITE'S MOVE TO BLACK
-					try{
+					try {
 						server.write(moveServerToClient);
 					} catch (IOException e) {
 						System.out.println("Network error: exiting the game");
 						return;
 					}
 					// RECEIVE BLACK'S MOVE
-					try{
+					try {
 						String moveClientToServer = server.read();
 						if (moveClientToServer.equals("exit")) {
 							break;
@@ -103,11 +105,13 @@ public class God {
 					} catch (IOException e) {
 						System.out.println("Network error: exiting the game");
 						return;
+					} finally {
+						server.close();
 					}
 				}
-				System.out.println(p2+" wins!");
+				System.out.println(p2 + " wins!");
 				// UPDATE SCORES
-				scores.addScore(new ChessScore(p2, (float)222, 1234));
+				scores.addScore(new ChessScore(p2, (float) 222, 1234));
 				break;
 
 			case CLIENT:
@@ -139,7 +143,7 @@ public class God {
 				while (true) {
 					chess.printBoard(chessboard);
 					// RECEIVE MOVE FROM WHITE
-					try{
+					try {
 						String moveServerToClient = client.read();
 						if (moveServerToClient.equals("exit")) {
 							break;
@@ -149,7 +153,7 @@ public class God {
 					} catch (IOException e) {
 						System.out.println("Network error: exiting the game");
 						return;
-					}				
+					}
 					// PLAY BLACK'S MOVE
 					String moveClientToServer = sc.nextLine();
 					if (moveClientToServer.equals("exit")) {
@@ -157,20 +161,21 @@ public class God {
 					}
 					chess.move(chessboard, moveClientToServer);
 					// SEND BLACK'S MOVE TO THE SERVER
-					try{
+					try {
 						client.write(moveClientToServer);
 					} catch (IOException e) {
 						System.out.println("Network error: exiting the game");
 						return;
-					}		
+					}
 				}
-				System.out.println(p1+" wins!");
+				client.close();
+				System.out.println(p1 + " wins!");
 				scores.addScore(new ChessScore(p1, (float) 222, 1234));
 				break;
 		}
 	}
 
-	public static void play(ChessHighScore scores){
+	public static void play(ChessHighScore scores) {
 		Code Geass = new Code();
 		Geass.command();
 		Scanner sc = new Scanner(System.in);
@@ -224,7 +229,7 @@ public class God {
 			scores.addScore(new ChessScore(p1, (float) (endTime - startTime) / 1000, elo)); //pass updated elo
 			System.out.println("Enter 'y' to play again; any other key will exit");
 		} while (sc.next().equals("y"));
-	
+
 
 	}
 

@@ -48,12 +48,24 @@ public class Server extends Network {
 		return obj;
 	}
 
+	@Override
 	public void write(String msg) throws IOException{
 		dataOutputStream.writeUTF(msg);
 		dataOutputStream.flush();
 	}
 
+	@Override
 	public String read() throws IOException {
 		return dataInputStream.readUTF();
+	}
+
+	@Override
+	public void close() {
+		super.close();
+		try {
+			serverSocket.close();
+		} catch (IOException e){
+			e.printStackTrace();
+		}
 	}
 }
