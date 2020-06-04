@@ -90,7 +90,7 @@ public class God {
 						if(validWHITE == 0)
 							System.err.println("Illegal move, enter move again.");
 					} while(validWHITE==0);
-
+					
 					chess.printBoard(chessboard);
 					// SEND WHITE'S MOVE TO BLACK
 					try{
@@ -99,6 +99,8 @@ public class God {
 						System.out.println("Network error: exiting the game");
 						return;
 					}
+					while(sc.nextLine()!=null)
+						System.out.println("Don't move out of turn!");
 					// RECEIVE BLACK'S MOVE
 					try{
 						String moveClientToServer = server.read();
@@ -148,6 +150,8 @@ public class God {
 				chess.printBoard(chessboard);
 				while (true) {
 					String moveClientToServer = null;
+					while(sc.nextLine()!=null)
+						System.out.println("Don't move out of turn!");
 					// RECEIVE MOVE FROM WHITE
 					try{
 						String moveServerToClient = client.read();
