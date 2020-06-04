@@ -184,6 +184,55 @@ public class Chess {
 //               notify();
     }
 
+    public int move(Pieces[][] chessboard, String move, int mutex) {
+        
+        String[] components = move.split(" ");                    //Breaks Standard notation into each character
+        
+        if (components.length > 3) {                                //For incorrect notation
+            System.err.println("\nPlease provide valid move!\n");
+        } else if (components[0].length() != 2 || components[2].length() != 2) {     //For incomplete notation
+            System.err.println("\nPlease provide valid move!\n");
+        } else if (components[0].charAt(0) < 'a' || components[0].charAt(0) > 'h' || components[0].charAt(1) < '1' || components[0].charAt(1) > '8') {
+            System.err.println("\nPlease provide valid move!\n");
+        } else if (components[2].charAt(0) < 'a' || components[2].charAt(0) > 'h' || components[2].charAt(1) < '1' || components[2].charAt(1) > '8') {
+            System.err.println("\nPlease provide valid move!\n");
+        } else {
+            // make the move: replace original position with Pieces.
+            int col = components[0].charAt(0) - 97;
+            int row = Math.abs(components[0].charAt(1) - 49 - 7);
+
+            //and place the piece into the new position
+            int nCol = components[2].charAt(0) - 97;
+            int nRow = Math.abs(components[2].charAt(1) - 49 - 7);
+
+            //    System.out.println(col+ " " + row + " " + nCol + " " + nRow);     //Test-printing to keep checking for correct moves
+            if (isValid(chessboard, row, col, nRow, nCol)) {            //Check fo Valid moves
+                if(mutex == 1 && (chessboard[row][col] == Pieces.WHITE_BISHOP || 
+                chessboard[row][col] == Pieces.WHITE_KING || chessboard[row][col]== Pieces.WHITE_KNIGHT ||
+                chessboard[row][col] == Pieces.WHITE_PAWN || chessboard[row][col] == Pieces.WHITE_ROOK || 
+                chessboard[row][col] == Pieces.WHITE_QUEEN))
+                    return 0;
+                     
+                if(mutex == 0 && (chessboard[row][col] == Pieces.BLACK_BISHOP || 
+                    chessboard[row][col] == Pieces.BLACK_KING || chessboard[row][col]== Pieces.BLACK_KNIGHT ||
+                    chessboard[row][col] == Pieces.BLACK_PAWN || chessboard[row][col] == Pieces.BLACK_ROOK || 
+                    chessboard[row][col] == Pieces.BLACK_QUEEN))
+                        return 0;
+                chessboard[nRow][+nCol] = chessboard[row][+col];
+                //      chessboard[nRow][+nCol] = chessboard[row][+col];
+                //      chessboard[row][+col] = Pieces.EMPTY;
+                
+                chessboard[row][col] = Pieces.EMPTY;
+                return 1;
+            } else
+                System.err.println("Illegal Move, enter again.");  //AHA
+                return 0;
+
+        }
+        return 1;
+//               notify();
+    }
+
 
     private static boolean isValid(Pieces[][] chessboard, int row, int col, int nRow, int nCol) {
 

@@ -44,7 +44,6 @@ public class God {
 	}
 
 	public static void playMultiplayer(ChessHighScore scores, Chess.MULTIPLAYER mode){
-		Chess game;
 		Player player = new Player();
 		String p1=null, p2=null;
 
@@ -71,20 +70,28 @@ public class God {
 				System.out.println("\nEnter player 1 name (white): ");
 				p1 = sc.next();
 				player.SetWhite(p1);
+				int validWHITE = 0;
 				
 				// INSTRUCTIONS
 				System.out.println("\nEnter 'exit' to forfeit in mid-game");
 				System.out.println("\nInput the moves in Standard Algebraic Notation (example: a2 to a3 for leftmost white pawn)\n");
 				sc.nextLine();
-
+			
+				chess.printBoard(chessboard);
 				while (true) {
-					chess.printBoard(chessboard);
+					String moveServerToClient = null;
 					// PLAY WHITE'S MOVE
-					String moveServerToClient = sc.nextLine();
-					if (moveServerToClient.equals("exit")) {
-						break;
-					}
-					chess.move(chessboard, moveServerToClient);
+					do{
+						moveServerToClient = sc.nextLine();
+						if (moveServerToClient.equals("exit")) {
+							break;
+						}	
+						validWHITE = chess.move(chessboard, moveServerToClient,0);
+						if(validWHITE == 0)
+							System.err.println("Illegal move, enter move again.");
+					} while(validWHITE==0);
+
+					chess.printBoard(chessboard);
 					// SEND WHITE'S MOVE TO BLACK
 					try{
 						server.write(moveServerToClient);
@@ -100,6 +107,7 @@ public class God {
 						}
 						// PLAY BLACK'S MOVE
 						chess.move(chessboard, moveClientToServer);
+						chess.printBoard(chessboard);
 					} catch (IOException e) {
 						System.out.println("Network error: exiting the game");
 						return;
@@ -130,14 +138,16 @@ public class God {
 				System.out.println("Enter player 2 name (black): ");
 				p2 = sc.next();
 				player.SetBlack(p2);
+				int validBLACK = 0;
 
 				// INSTRUCTIONS
 				System.out.println("\nEnter 'exit' to forfeit in mid-game");
 				System.out.println("\nInput the moves in Standard Algebraic Notation (example: a2 to a3 for leftmost white pawn)\n");
 				sc.nextLine();
-
+				
+				chess.printBoard(chessboard);
 				while (true) {
-					chess.printBoard(chessboard);
+					String moveClientToServer = null;
 					// RECEIVE MOVE FROM WHITE
 					try{
 						String moveServerToClient = client.read();
@@ -146,16 +156,23 @@ public class God {
 						}
 						// PLAY WHITE'S MOVE
 						chess.move(chessboard, moveServerToClient);
+						chess.printBoard(chessboard);
 					} catch (IOException e) {
 						System.out.println("Network error: exiting the game");
 						return;
 					}				
 					// PLAY BLACK'S MOVE
-					String moveClientToServer = sc.nextLine();
-					if (moveClientToServer.equals("exit")) {
-						break;
-					}
-					chess.move(chessboard, moveClientToServer);
+					do{
+						moveClientToServer = sc.nextLine();
+						if (moveClientToServer.equals("exit")) {
+							break;
+						}
+						validBLACK = chess.move(chessboard, moveClientToServer,1);
+						if(validBLACK == 0)
+							System.err.println("Illegal move, enter move again.");
+					} while(validBLACK==0);
+					
+					chess.printBoard(chessboard);
 					// SEND BLACK'S MOVE TO THE SERVER
 					try{
 						client.write(moveClientToServer);
