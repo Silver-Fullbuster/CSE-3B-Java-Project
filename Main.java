@@ -8,7 +8,7 @@ public class Main {
 		int choice;
 		do {
 			System.out.print("\t\t\tGame Center\n" +
-					"(made by Kartikeya and Mehul)\n" +
+					"(made by Charishma, Kartikeya and Mehul)\n" +
 					"\n" +
 					"1. Chess\n" +
 					"2. Hangman\n" +
